@@ -1,0 +1,401 @@
+{
+  "information/information.html": {
+    "href": "information/information.html",
+    "resources": [
+      "css/mui.min.css",
+      "css/app.css",
+      "css/mui.picker.css",
+      "css/mui.poppicker.css",
+      "css/mui.picker.min.css",
+      "js/mui.min.js",
+      "js/mui.picker.min.js",
+      "js/mui.picker.js",
+      "js/mui.poppicker.js",
+      "js/city.data.js",
+      "js/city.data-3.js"
+    ],
+    "refer": [
+      "order/getorder1.html"
+    ],
+    "priority": 0
+  },
+  "publish/jinjifabu.html": {
+    "href": "publish/jinjifabu.html",
+    "resources": [
+      "css/mui.min.css",
+      "css/app.css",
+      "css/mui.picker.css",
+      "css/mui.poppicker.css",
+      "css/mui.picker.min.css",
+      "js/mui.min.js",
+      "js/mui.picker.min.js",
+      "js/mui.picker.js",
+      "js/mui.poppicker.js",
+      "js/city.data.js",
+      "js/city.data-3.js"
+    ],
+    "refer": [],
+    "priority": 0
+  },
+  "publish/publish1.2.html": {
+    "href": "publish/publish1.2.html",
+    "resources": [
+      "css/mui.min.css",
+      "css/app.css",
+      "css/mui.picker.css",
+      "css/mui.poppicker.css",
+      "css/mui.picker.min.css",
+      "js/mui.min.js",
+      "js/mui.picker.min.js",
+      "js/mui.picker.js",
+      "js/mui.poppicker.js",
+      "js/city.data.js",
+      "js/city.data-3.js",
+      "js/jquery-1.6.2.min.js",
+      "js/automatically.js"
+    ],
+    "refer": [
+      "publish/jinjifabu.html"
+    ],
+    "priority": 0
+  },
+  "information/workinformation.html": {
+    "href": "information/workinformation.html",
+    "resources": [
+      "css/mui.min.css",
+      "css/app.css",
+      "css/mui.picker.css",
+      "css/mui.poppicker.css",
+      "css/mui.picker.min.css",
+      "js/mui.min.js",
+      "js/mui.picker.min.js",
+      "js/mui.picker.js",
+      "js/mui.poppicker.js",
+      "js/city.data.js",
+      "js/city.data-3.js"
+    ],
+    "refer": [],
+    "priority": 0
+  },
+  "MyProfile/evaluation.html": {
+    "href": "MyProfile/evaluation.html",
+    "resources": [
+      "css/mui.min.css",
+      "css/icons-extra.css",
+      "css/app.css",
+      "images/iconfont-tianjia.png",
+      "js/mui.min.js",
+      "js/mui.locker.js"
+    ],
+    "refer": [],
+    "priority": 0
+  },
+  "MyProfile/rework.html": {
+    "href": "MyProfile/rework.html",
+    "resources": [
+      "css/mui.min.css",
+      "js/mui.min.js",
+      "js/mui.locker.js",
+      "images/iconfont-tianjia.png"
+    ],
+    "refer": [],
+    "priority": 0
+  },
+  "MyProfile/MyPublish.html": {
+    "href": "MyProfile/MyPublish.html",
+    "resources": [
+      "css/mui.min.css",
+      "css/app.css",
+      "css/mui.picker.css",
+      "css/mui.poppicker.css",
+      "css/mui.picker.min.css",
+      "js/mui.min.js",
+      "js/mui.picker.min.js",
+      "js/mui.picker.js",
+      "js/mui.poppicker.js",
+      "js/city.data.js",
+      "js/city.data-3.js"
+    ],
+    "refer": [
+      "information/workinformation.html",
+      "MyProfile/evaluation.html",
+      "MyProfile/rework.html"
+    ],
+    "priority": 0
+  },
+  "MyProfile/mypublishujob.html": {
+    "href": "MyProfile/mypublishujob.html",
+    "resources": [
+      "css/mui.min.css",
+      "css/app.css",
+      "css/mui.picker.css",
+      "css/mui.poppicker.css",
+      "css/mui.picker.min.css",
+      "js/mui.min.js",
+      "js/mui.picker.min.js",
+      "js/mui.picker.js",
+      "js/mui.poppicker.js",
+      "js/city.data.js",
+      "js/city.data-3.js",
+      "js/jquery-1.6.2.min.js"
+    ],
+    "refer": [
+      "publish/publish1.2.html",
+      "main_page/main2.html",
+      "MyProfile/MyPublish.html"
+    ],
+    "priority": 0
+  },
+  "order/getorder.html": {
+    "href": "order/getorder.html",
+    "resources": [
+      "js/mui.min.js",
+      "login/test3.txt",
+      "css/app.css",
+      "css/mui.picker.css",
+      "css/mui.poppicker.css",
+      "css/mui.min.css",
+      "person_center/mycenter.html",
+      "js/jquery-1.6.2.min.js"
+    ],
+    "refer": [
+      "information/information.html",
+      "order/order_info.html"
+    ],
+    "priority": 0
+  },
+  "person_center/person_realname.html": {
+    "href": "person_center/person_realname.html",
+    "resources": [
+      "css/mui.min.css",
+      "js/mui.min.js"
+    ],
+    "refer": [
+      "person_center/mycenter.html"
+    ],
+    "priority": 0
+  },
+  "person_center/company_realname.html": {
+    "href": "person_center/company_realname.html",
+    "resources": [
+      "css/mui.min.css",
+      "js/mui.min.js"
+    ],
+    "refer": [
+      "person_center/mycenter.html"
+    ],
+    "priority": 0
+  },
+  "person_center/help.html": {
+    "href": "person_center/help.html",
+    "resources": [
+      "css/mui.min.css",
+      "js/mui.min.js"
+    ],
+    "refer": [
+      "person_center/myinfo.html"
+    ],
+    "priority": 0
+  },
+  "person_center/myinfo.html": {
+    "href": "person_center/myinfo.html",
+    "resources": [
+      "css/mui.min.css",
+      "js/mui.min.js"
+    ],
+    "refer": [
+      "person_center/help.html",
+      "person_center/mycenter.html"
+    ],
+    "priority": 0
+  },
+  "person_center/mycenter.html": {
+    "href": "person_center/mycenter.html",
+    "resources": [
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "images/timg.jpg"
+    ],
+    "refer": [
+      "MyProfile/mypublishujob.html",
+      "person_center/mycenter.html",
+      "order/getorder.html",
+      "person_center/person_realname.html",
+      "person_center/company_realname.html",
+      "person_center/myinfo.html",
+      "person_center/setting.html",
+      "order/pullorder.html",
+      "order/historyorder.html",
+      "order/getorder1.html"
+    ],
+    "priority": 0
+  },
+  "main_page/nav.html": {
+    "href": "main_page/nav.html",
+    "resources": [
+      "css/mui.min.css",
+      "js/mui.min.js",
+      "main_page/main2.html",
+      "main_page/main.html"
+    ],
+    "refer": [
+      "MyProfile/mypublishujob.html",
+      "person_center/mycenter.html",
+      "main_page/main2.html",
+      "myprofile/mypublishlist.html",
+      "main_page/main.html",
+      "login/login.html"
+    ],
+    "priority": 0
+  },
+  "main_page/notice.html": {
+    "href": "main_page/notice.html",
+    "resources": [
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "css/app.css",
+      "images/success.jpg",
+      "images/fail.jpg"
+    ],
+    "refer": [
+      "order/getorder.html",
+      "main_page/main2.html"
+    ],
+    "priority": 0
+  },
+  "main_page/main2.html": {
+    "href": "main_page/main2.html",
+    "resources": [
+      "js/mui.min.js",
+      "js/mui.picker.js",
+      "js/mui.poppicker.js",
+      "js/city.data.js",
+      "js/city.data-3.js",
+      "login/test2.txt",
+      "css/app.css",
+      "css/mui.picker.css",
+      "css/mui.poppicker.css",
+      "css/mui.min.css",
+      "images/yuantiao.jpg",
+      "images/shuijiao.jpg",
+      "images/muwu.jpg",
+      "images/cbd.jpg",
+      "js/mui.picker.min.js",
+      "js/jquery-1.6.2.min.js"
+    ],
+    "refer": [
+      "information/information.html",
+      "main_page/nav.html",
+      "main_page/notice.html",
+      "person_center/myinfo.html",
+      "person_center/canvas.html",
+      "main_page/advert.html"
+    ],
+    "priority": 0
+  },
+  "order/pullorder.html": {
+    "href": "order/pullorder.html",
+    "resources": [
+      "js/mui.min.js",
+      "js/jquery-1.6.2.min.js",
+      "login/test3.txt",
+      "css/mui.min.css"
+    ],
+    "refer": [
+      "information/information.html",
+      "person_center/mycenter.html"
+    ],
+    "priority": 0
+  },
+  "person_center/canvas.html": {
+    "href": "person_center/canvas.html",
+    "priority": 0
+  },
+  "order/historyorder.html": {
+    "refer": [
+      "person_center/mycenter.html",
+      "order/evaluate.html"
+    ]
+  },
+  "order/getorder1.html": {
+    "refer": [
+      "information/information.html"
+    ]
+  },
+  "login/login.html": {
+    "refer": [
+      "login/login_code.html",
+      "login/reg.html",
+      "main_page/nav.html",
+      "person_center/setting.html",
+      "login/forget_password.html"
+    ]
+  },
+  "login/login_code.html": {
+    "refer": [
+      "login/login.html"
+    ]
+  },
+  "login/reg.html": {
+    "refer": [
+      "login/login.html",
+      "login/security_protocol .html"
+    ]
+  },
+  "main_page/main.html": {
+    "refer": [
+      "main_page/notice.html",
+      "main_page/advert.html",
+      "order/order_info.html",
+      "main_page/jobitems.html",
+      "main_page/barcode_scan.html",
+      "main_page/pullrefresh.html"
+    ],
+    "resources": [
+      "main_page/jobitems.html",
+      "main_page/pullrefresh.html"
+    ]
+  },
+  "person_center/setting.html": {
+    "refer": [
+      "login/login.html"
+    ]
+  },
+  "order/order_info.html": {
+    "refer": [
+      "person_center/bossinfo.html",
+      "person_center/help.html"
+    ]
+  },
+  "main_page/pullrefresh.html": {
+    "refer": [
+      "main_page/advert.html",
+      "order/order_info.html",
+      "main_page/maps_map.html"
+    ]
+  },
+  "login/forget_password.html": {
+    "refer": [
+      "login/login.html"
+    ]
+  },
+  "myprofile/mypublishlist.html": {
+    "refer": [
+      "publish/publish.html",
+      "myprofile/mypublish.html"
+    ]
+  },
+  "login/security_protocol .html": {
+    "refer": [
+      "login/reg.html"
+    ]
+  },
+  "main_page/maps_map.html": {
+    "resources": [
+      "main_page/maps_map_sub.html"
+    ],
+    "refer": [
+      "main_page/maps_map_sub.html"
+    ]
+  }
+}

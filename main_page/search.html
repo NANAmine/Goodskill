@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link href="../css/mui.picker.css" rel="stylesheet" />
+		<link href="../css/mui.poppicker.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../css/icons-extra.css" />
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title"><input id="input_search" type="search" class="mui-input-clear" width="80%" placeholder="找工作 找小区"></h1>
+			<li class="mui-btn mui-btn-link mui-pull-right">
+				<span class="mui-icon mui-icon-search" onclick="search_0()"></span>
+			</li>
+		</header>
+		<div class="mui-content" >
+			<div class="mui-table-view">
+				<label style="margin-left: 2%;">历史记录：</label>
+				<li class="mui-table-view-cell">
+				<p id="search0" style="margin-left: 10%;" onclick="search(0)"></p>
+				</li>
+				<li class="mui-table-view-cell">
+				<p id="search1" style="margin-left: 10%;" onclick="search(1)"></p>
+				</li>
+				<li class="mui-table-view-cell">
+				<p id="search2" style="margin-left: 10%;" onclick="search(2)"></p>
+				</li>
+				<li class="mui-table-view-cell">
+				<p id="search3" style="margin-left: 10%;" onclick="search(3)"></p>
+				</li>
+				<li class="mui-table-view-cell">
+				<p id="search4" style="margin-left: 10%;" onclick="search(4)"></p>
+				</li>
+				<li class="mui-table-view-cell">
+				<p id="search5" style="margin-left: 10%;" onclick="search(5)"></p>
+				</li>
+				<li class="mui-table-view-cell">
+				<p id="search6" style="margin-left: 10%;" onclick="search(6)"></p>
+			    </li>
+			</div>
+
+		</div>
+
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/urlconfiguration.js"></script>
+	<script src="../js/mui.picker.min.js"></script>
+	<!--	<script src="../js/mui.picker.js"></script>-->
+	<script src="../js/mui.poppicker.js"></script>
+	<script src="../js/city.data.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../js/city.data-3.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../js/jquery-1.6.2.min.js"></script>
+	<script type="text/javascript">
+		//		var a=[7];
+		var a = new Array(8);
+		a = a.join(' ,').split(',');
+		a.lenth = a.lenth - 1;
+		//		a=localStorage.getItem("a");
+
+		function search_0() {
+			var account = document.getElementById("input_search").value;
+			for(i = 7; i--; i > 0) {
+				console.log(a[i]);
+				a[i] = a[i - 1];
+			}
+			a[0] = account;
+			for(i = 7; i--; i >= 0) {
+				console.log(i);
+				document.getElementById("search" + i).innerHTML = a[i];
+				localStorage.setItem("a_"+i,a[i]);
+			}
+		}
+		function search(id) {
+//			var account = document.getElementById("search"+id).innerHTML;
+//			document.getElementById("input_search").setAttribute("value",account);
+//			for(i = 7; i--; i > 0) {
+//				console.log(a[i]);
+//				a[i] = a[i - 1];
+//			}
+//			a[0] = account;
+//			for(i = 7; i--; i >= 0) {
+//				console.log(i);
+//				document.getElementById("search" + i).innerHTML = a[i];
+//				localStorage.setItem("a_"+i,a[i]);
+//			}
+		}
+		
+		(function(){
+			for(i=7;i--;i>=0){
+				a[i]=localStorage.getItem("a_"+i);
+				document.getElementById("search" + i).innerHTML = a[i];
+			}
+		}())
+	</script>
+
+</html>

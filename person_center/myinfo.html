@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<!--App自定义的css-->
+		<link rel="stylesheet" type="text/css" href="../css/app.css" />
+		<link rel="stylesheet" type="text/css" href="../css/mui.picker.min.css" />
+		<style>
+			html,
+			body,
+			.mui-content {
+				height: 0px;
+				margin: 0px;
+				background-color: #efeff4;
+			}
+			
+			h5.mui-content-padded {
+				margin-left: 3px;
+				margin-top: 20px !important;
+			}
+			
+			h5.mui-content-padded:first-child {
+				margin-top: 12px !important;
+			}
+			
+			.mui-btn {
+				font-size: 16px;
+				padding: 8px;
+				margin: 3px;
+			}
+			
+			.ui-alert {
+				text-align: center;
+				padding: 20px 10px;
+				font-size: 16px;
+			}
+			
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">我的详细资料</h1>
+			<a id="icon-help" onclick="open_help()"><span class="mui-icon mui-icon-help mui-pull-right"></span></a>
+		</header>
+		<div class="mui-content">
+			<div class="mui-card">
+				<form class="mui-input-group" id="show" style="margin-top: 10%;">
+
+				</form>
+			</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
+		<script src="../js/jquery-1.6.2.min.js"></script>
+		<script src="../js/urlconfiguration.js"></script>
+		<script>
+			var birthday = localStorage.getItem("birthday");
+
+			//帮助页面跳转
+			function open_help() {
+				var baseUrl = 'help.html';
+				var url = mui.os.plus ? baseUrl : baseUrl;
+				mui.openWindow({
+					url: url,
+				})
+			}
+
+			//显示详细信息
+			(function() {
+				time();
+				var user_authenticCom = localStorage.getItem("user_authenticCom");
+				var user_authenticPer = localStorage.getItem("user_authenticPer");
+				var sex = localStorage.getItem("sex");
+				var address_home = localStorage.getItem("address_home");
+				var name_company = localStorage.getItem("name_company");
+				var address_company = localStorage.getItem("address_company");
+				var wechat = localStorage.getItem("wechat");
+				var user_id = localStorage.getItem("user_id");
+				var phone = localStorage.getItem("phone");
+				var beans = localStorage.getItem("beans");
+				var name = localStorage.getItem("name");
+				console.log(name + "111");
+				var is_vip = localStorage.getItem("is_vip");
+				var avgscore_boss = localStorage.getItem("avgscore_boss");
+				var avgscore_worker = localStorage.getItem("avgscore_worker");
+				var skills = localStorage.getItem("skills");
+				//			    mui.alert("beans:"+beans);
+				if(user_authenticPer == 1) {
+					var realname = "已认证";
+				} else if(user_authenticPer == 0) {
+					name = "未实名";
+					realname = "未实名";
+				} else {
+					realname = "审核中";
+				}
+
+				if(user_authenticCom == 1) {
+					var real_company = "已认证";
+				} else if(user_authenticCom == 0) {
+					name_company = "未实名";
+					real_company = "未实名";
+				} else {
+					real_company = "审核中";
+				} 
+				if(birthday == "undefined" || birthday == null) {
+					birthday = "年--月--日";
+				}
+				if(sex == "undefined") {
+					sex = "未添加信息";
+				}
+				if(address_home == "undefined") {
+					address_home = "添加居住地址";
+				}
+				if(address_company == "undefined") {
+					address_company = "添加公司地址";
+				}
+				if(wechat == "undefined") {
+					wechat = "绑定微信号";
+				}
+				if(phone == "undefined") {
+					phone = "未添加信息";
+				}
+				if(beans == "undefined" || beans == null) {
+					beans = "未查到信息";
+				}
+				if(is_vip == "undefined") {
+					is_vip = "未添加信息";
+				}
+				if(avgscore_boss == "undefined") {
+					avgscore_boss = "未添加信息";
+				}
+				if(avgscore_worker == "undefined") {
+					avgscore_worker = "未添加信息";
+				}
+				if(skills == "undefined" || skills == null || skills == "") {
+					skills = "暂未习得";
+				}
+				$("#show").append(
+					'<div class="mui-input-row">' +
+					'<label>姓名：</label>' +
+					'<p id="username" style="color: #000000; margin-top: 1.5%;">' + name +
+					'<a id="icon-person">' + realname + '<span class="mui-icon mui-icon-person"></span></a>' +
+					'</div>' +
+					'<div class="mui-input-row">' +
+					'<label>工长评分：</label>' +
+					'<p id="ground" style="color: #000000; margin-top: 1.5%;">' + avgscore_boss +
+					'</div>' +
+					'<div class="mui-input-row">' +
+					'<label>工人评分：</label>' +
+					'<p id="ground" style="color: #000000; margin-top: 1.5%;">' + avgscore_worker +
+					'</div>' +
+					'<div class="mui-input-row">' +
+					'<label>技能：</label>' +
+					'<p id="skill" style="color: #000000; margin-top: 1.5%;" >' + skills +
+					'</div>' +
+					'<div class="mui-input-row">' +
+					'<label>电话：</label>' +
+					'<p id="phone" style="color: #000000; margin-top: 1.5%;">' + phone +
+					'</div>' +
+					'<div class="mui-input-row ">' +
+					'<label>性别：</label>' +
+					'<p id="sex"  style="color: #000000; margin-top: 1.5%;">' + sex +
+					'</div>' +
+					'<div class="mui-input-row ">' +
+					'<label>出生日期:</label>' +
+					'<button style="width: 63%;margin-top: -0%;" id="result" data-options= {"type":"date","beginYear":1960,"endYear":2016} class="btn mui-btn mui-btn-block">' + birthday +
+					'</button></div>' +
+					'<div class="mui-input-row">' +
+					'<label>居住地址：</label>' +
+					'<input id="address_home" type="text" style="font-size: 14px;" value="' + address_home + '">' +
+					'</div>' +
+					'<div class="mui-input-row">' +
+					'<label>认证公司：</label>' +
+					'<p id="name_company" style="color: #000000; margin-top: 1.5%;">' + name_company +
+					'<a id="icon-person">' + real_company + '<span class="mui-icon mui-icon-person"></span></a>' +
+					'</div>' +
+					'<div class="mui-input-row">' +
+					'<label>最大接单：</label>' +
+					'<p id="beans" style="color: #000000; margin-top: 1.5%;">' + beans +
+					'</div>' +
+
+					'<div class="mui-input-row">' +
+					'<label>公司地址：</label>' +
+					'<input id="address_company" type="text" style="font-size: 14px;" value="' + address_company + '" >' +
+					'</div>' +
+					'<div class="mui-input-row">' +
+					'<label>微信号：</label>' +
+					'<input id="wechat" type="text" style="font-size: 14px;" class=" mui-input" placeholder="" maxlength="11" value="' + wechat + '">' +
+					'</div>' +
+					'<div class="mui-button-row">' +
+					'<button style="margin-top: -1%;" class="mui-btn mui-btn-primary" type="button" onclick="updata()">保存提交</button>' +
+					'</div>'
+				);
+			}())
+			//修改上传
+			function updata() {
+				var user_id = localStorage.getItem("user_id");
+				var wechat = document.getElementById("wechat").value;
+				var address_home = document.getElementById("address_home").value;
+				var address_company = document.getElementById("address_company").value;
+				$.ajax({
+					contentType: "application/json",
+					type: "GET",
+					url: url_1 + "add_userMessage.do?jsoncallback=?",
+					data: "wechat=" + wechat + "&address_home=" + address_home + "&address_company=" + address_company + "&birthday=" + birthday + "&user_id=" + user_id,
+					dataType: "json",
+					success: function(data) {
+						if(data.flag == 1) {
+							localStorage.setItem("wechat", wechat);
+							localStorage.setItem("address_home", address_home);
+							localStorage.setItem("address_company", address_company);
+							localStorage.setItem("birthday", birthday);
+							mui.alert("修改成功！");
+						} else {
+							mui.alert("修改失败！");
+						}
+					},
+					error: function() {
+						alert("网络连接出错！");
+					}
+				});
+			}
+			//出生日期选择
+			function time() {
+				mui.init();
+				mui.plusReady(function() {
+					var result = $('#result')[0];
+					var btns = $('.btn');
+					btns.each(function(i, btn) {
+						btn.addEventListener('tap', function() {
+							var _self = this;
+							var optionsJson = this.getAttribute('data-options') || '{}';
+							var options = JSON.parse(optionsJson);
+							var id = this.getAttribute('id');
+							_self.picker = new mui.DtPicker(options);
+							_self.picker.show(function(rs) {
+								result.innerText = rs.text;
+								birthday = rs.text;
+								_self.picker.dispose();
+								_self.picker = null;
+							});
+
+						}, false);
+					});
+				})
+			}
+		</script>
+	</body>
+
+</html>

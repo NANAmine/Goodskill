@@ -1,0 +1,278 @@
+{
+    "msg": [
+        {
+            "id": 5,
+            "user": {
+                "id": 3,
+                "name": "张三",
+                "password": "111112",
+                "birthyear": 1946,
+                "sex": "女",
+                "phone": "13123456787",
+                "address_home": "张三家",
+                "id_card": "1112",
+                "id_card_front_url": "fileUpload/temp/2.jpg",
+                "id_card_back_url": "fileUpload/temp/2.jpg",
+                "business_license_front_url": "fileUpload/temp/2.jpg",
+                "beans": 300,
+                "money": 3,
+                "wechat": "123125",
+                "credit": 0,
+                "create_time": "Nov 28, 2017 7:51:01 PM",
+                "user_authentic": 0,
+                "is_vip": 0,
+                "avgscore_worker": 0,
+                "avgscore_boss": 0,
+                "status": 1,
+                "jobtypes": [
+                    {
+                        "id": 1,
+                        "name": "电工",
+                        "avgsalary": 0,
+                        "status": 1
+                    }
+                ],
+                "skills": [
+                    {
+                        "id": 2,
+                        "jobtype": {
+                            "id": 1,
+                            "name": "电工",
+                            "avgsalary": 0,
+                            "status": 1
+                        },
+                        "name": "接电",
+                        "status": 1
+                    }
+                ]
+            },
+            "area": {
+                "id": 25,
+                "name": "固安县",
+                "code": "131022",
+                "previous_code": "131000",
+                "level": 3,
+                "status": 1
+            },
+            "community": {
+                "id": 31,
+                "name": "快乐小区",
+                "city": {
+                    "id": 21,
+                    "name": "廊坊市",
+                    "code": "131000",
+                    "previous_code": "130000",
+                    "level": 2,
+                    "status": 1
+                },
+                "province": {
+                    "id": 22,
+                    "name": "河北省",
+                    "code": "130000",
+                    "level": 1,
+                    "status": 1
+                },
+                "county": {
+                    "id": 25,
+                    "name": "固安县",
+                    "code": "131022",
+                    "previous_code": "131000",
+                    "level": 3,
+                    "status": 1
+                },
+                "status": 0
+            },
+            "building": "13",
+            "cell": "2",
+            "number": "201",
+            "decoration_type": 2,
+            "create_time": "Nov 28, 2017 6:45:54 PM",
+            "release_status": 0,
+            "job_status": 0,
+            "status": 1
+        },
+        {
+            "id": 6,
+            "user": {
+                "id": 3,
+                "name": "张三",
+                "password": "111112",
+                "birthyear": 1946,
+                "sex": "女",
+                "phone": "13123456787",
+                "address_home": "张三家",
+                "id_card": "1112",
+                "id_card_front_url": "fileUpload/temp/2.jpg",
+                "id_card_back_url": "fileUpload/temp/2.jpg",
+                "business_license_front_url": "fileUpload/temp/2.jpg",
+                "beans": 300,
+                "money": 3,
+                "wechat": "123125",
+                "credit": 0,
+                "create_time": "Nov 28, 2017 7:51:01 PM",
+                "user_authentic": 0,
+                "is_vip": 0,
+                "avgscore_worker": 0,
+                "avgscore_boss": 0,
+                "status": 1,
+                "jobtypes": [
+                    {
+                        "id": 1,
+                        "name": "电工",
+                        "avgsalary": 0,
+                        "status": 1
+                    }
+                ],
+                "skills": [
+                    {
+                        "id": 2,
+                        "jobtype": {
+                            "id": 1,
+                            "name": "电工",
+                            "avgsalary": 0,
+                            "status": 1
+                        },
+                        "name": "接电",
+                        "status": 1
+                    }
+                ]
+            },
+            "area": {
+                "id": 25,
+                "name": "固安县",
+                "code": "131022",
+                "previous_code": "131000",
+                "level": 3,
+                "status": 1
+            },
+            "community": {
+                "id": 31,
+                "name": "快乐小区",
+                "city": {
+                    "id": 21,
+                    "name": "廊坊市",
+                    "code": "131000",
+                    "previous_code": "130000",
+                    "level": 2,
+                    "status": 1
+                },
+                "province": {
+                    "id": 22,
+                    "name": "河北省",
+                    "code": "130000",
+                    "level": 1,
+                    "status": 1
+                },
+                "county": {
+                    "id": 25,
+                    "name": "固安县",
+                    "code": "131022",
+                    "previous_code": "131000",
+                    "level": 3,
+                    "status": 1
+                },
+                "status": 0
+            },
+            "building": "14",
+            "cell": "2",
+            "number": "201",
+            "decoration_type": 2,
+            "create_time": "Nov 27, 2017 6:46:16 PM",
+            "release_status": 0,
+            "job_status": 0,
+            "status": 1
+        },
+        {
+            "id": 6,
+            "user": {
+                "id": 3,
+                "name": "张三",
+                "password": "111112",
+                "birthyear": 1946,
+                "sex": "女",
+                "phone": "13123456787",
+                "address_home": "张三家",
+                "id_card": "1112",
+                "id_card_front_url": "fileUpload/temp/2.jpg",
+                "id_card_back_url": "fileUpload/temp/2.jpg",
+                "business_license_front_url": "fileUpload/temp/2.jpg",
+                "beans": 300,
+                "money": 3,
+                "wechat": "123125",
+                "credit": 0,
+                "create_time": "Nov 28, 2017 7:51:01 PM",
+                "user_authentic": 0,
+                "is_vip": 0,
+                "avgscore_worker": 0,
+                "avgscore_boss": 0,
+                "status": 1,
+                "jobtypes": [
+                    {
+                        "id": 1,
+                        "name": "电工",
+                        "avgsalary": 0,
+                        "status": 1
+                    }
+                ],
+                "skills": [
+                    {
+                        "id": 2,
+                        "jobtype": {
+                            "id": 1,
+                            "name": "电工",
+                            "avgsalary": 0,
+                            "status": 1
+                        },
+                        "name": "接电",
+                        "status": 1
+                    }
+                ]
+            },
+            "area": {
+                "id": 25,
+                "name": "固安县",
+                "code": "131022",
+                "previous_code": "131000",
+                "level": 3,
+                "status": 1
+            },
+            "community": {
+                "id": 31,
+                "name": "快乐小区",
+                "city": {
+                    "id": 21,
+                    "name": "廊坊市",
+                    "code": "131000",
+                    "previous_code": "130000",
+                    "level": 2,
+                    "status": 1
+                },
+                "province": {
+                    "id": 22,
+                    "name": "河北省",
+                    "code": "130000",
+                    "level": 1,
+                    "status": 1
+                },
+                "county": {
+                    "id": 25,
+                    "name": "固安县",
+                    "code": "131022",
+                    "previous_code": "131000",
+                    "level": 3,
+                    "status": 1
+                },
+                "status": 0
+            },
+            "building": "14",
+            "cell": "2",
+            "number": "201",
+            "decoration_type": 2,
+            "create_time": "Nov 27, 2017 6:46:16 PM",
+            "release_status": 0,
+            "job_status": 1,
+            "status": 1
+        }
+    ],
+    "flag": "1"
+}

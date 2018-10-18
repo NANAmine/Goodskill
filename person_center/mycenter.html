@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="../css/mui.min.css">
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<h1 class="mui-title">我的</h1>
+			<a class="mui-btn mui-btn-link mui-pull-right" onclick="set()" id="setting">设置</a>
+		</header>
+		<style>
+			
+			.head-img {
+				width: 40px;
+				height: 70px;
+			}
+			
+			.mui-fullscreen {
+				position: fixed;
+				z-index: 20;
+				background-color: #000;
+			}
+		</style>
+		<div class="mui-content">
+			<div class="mui-card">
+				<div class="mui-table-view-cell" style="width: 35%; margin-left: %;margin-top: 0%;">
+					<a id="head" class="mui-navigate-right">
+						<img class="head-img mui-action-preview" id="head-img1" style="width: 60%; margin-top: 10%; margin-left: 20%;" src="../images/loge.jpg" />
+						</span>
+					</a>
+				</div>
+				<div style="width: 100%; margin-left: 0%; margin-top: -25%;">
+					<p style="margin-left: 35%;color: #000000;">用户:
+						<a id="name" style="margin-left: 5%;color: #000000;"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<a id="bean" style="color: #000000;"></a>
+					</p>
+					<p style="margin-left: 35%;color: #000000;">认证：
+						<a id="real_name" style="color: #000000;"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<a id="real_company" style="color: #000000;"></a><br />
+					</p>
+					<p style="margin-left: 35%;color: #000000;">评级：
+						<a id="person" style="color: #000000;"></a><br />
+						<a id="boss" style="margin-left: 18%;color: #000000;"></a><br />
+						<a id="skills" style="margin-left: 18%;color: #000000;"></a>
+					</p>
+				</div>
+			</div>
+			<div class="mui-card" style="margin-top: %;">
+				<ul class="mui-table-view" style="margin-left: 2%;">
+					<p style="margin-top:0%;">
+						<h4>我的订单:</h4></p>
+					<p id="icon-person" style="margin-left: 10%;margin-bottom:30px ;">
+						<a style="margin-left: 10%; color: #000000;" onclick="getorder()">我的接单</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<a style="margin-left: 20%;margin-bottom:auto;color: #000000;" onclick="historyorder()">历史接单</a>
+					</p>
+				</ul>
+			</div>
+			<div class="mui-card">
+				<ul class="mui-table-view" style="margin-left: 2%;">
+					<p style="margin-top:-0%; ">
+						<h4>个人中心：</h4></p>
+					<p id="icon-person" style="margin-left: 10%;margin-bottom:-30px ;">
+						<a onclick="person_realname()" style="color: #000000;">个人实名认证</a>
+						<a style="margin-left: 8%;margin-bottom:auto ;color: #000000;" onclick="company_realname()">公司实名认证</a>
+						<a style="margin-left: 10%;margin-bottom:auto ;color: #000000;" onclick="myinfo()">我的详细资料</p>
+					</p>
+				</ul>
+			</div>
+			<div class="mui-card" style="margin-top: -5%;">
+				<ul class="mui-table-view" style="margin-left: 2%;">
+					<p style="margin-top: -10%;">
+						<h4>我的钱包：</h4></p>
+					<p style="margin-left: 15% ;width: 100%;color: #000000;">账户余额：</p>
+					<p id="icon-person" style="margin-left: -10%;margin-bottom:30px ;">
+						<a style="margin-left: 20%; color: #000000;">余额提现>></a>
+						<a style="margin-left: 20%;color: #000000;">账户充值>></a>
+					</p>
+				</ul>
+			</div>
+		</div>
+	</body>
+	<script src="../js/mui.min.js "></script>
+	<script src="../js/mui.view.js "></script>
+	<script src="../js/jquery-1.6.2.min.js"></script>
+	<script src="../js/urlconfiguration.js"></script>
+	<script>
+		var files1 = [];
+		var server = url_1 + "get_headPortrait_url.do?";
+		var headPortrait_url;
+		(function() {
+			var user_authenticCom = localStorage.getItem("user_authenticCom");
+			var user_authenticPer = localStorage.getItem("user_authenticPer");
+			var sex = localStorage.getItem("sex");
+			var address_home = localStorage.getItem("address_home");
+			var name_company = localStorage.getItem("name_company");
+			var address_company = localStorage.getItem("address_company");
+			var wechat = localStorage.getItem("wechat");
+			var user_id = localStorage.getItem("user_id");
+			var phone = localStorage.getItem("phone");
+			var beans = localStorage.getItem("beans");
+			var name = localStorage.getItem("name");
+			var is_vip = localStorage.getItem("is_vip");
+			var avgscore_boss = localStorage.getItem("avgscore_boss");
+			var avgscore_worker = localStorage.getItem("avgscore_worker");
+			var skills = localStorage.getItem("skills");
+			if(user_authenticPer == 0) {
+				name = "未实名";
+				var real_name = "个人未认证";
+			} else if(user_authenticPer == 2) {
+				name = "审核中";
+				var real_name = "个人未认证";
+			} else if(user_authenticPer == 1) {
+				var real_name = "个人已认证";
+			}
+			document.getElementById("name").innerHTML = name;
+			document.getElementById("real_name").innerHTML = real_name;
+			if(user_authenticCom == 1) {
+				var real_company = "认证公司" + name;
+			} else if(user_authenticCom == 0) {
+				var real_company = "公司未认证";
+			} else if(user_authenticCom == 2) {
+				var real_company = "审核中";
+			}
+			document.getElementById("real_company").innerHTML = real_company;
+
+			if(avgscore_boss == "undefined") {
+				avgscore_boss = "";
+			} else if(avgscore_boss < 2) {
+				avgscore_boss = "★☆☆☆☆";
+			} else if(avgscore_boss < 4) {
+				avgscore_boss = "★★☆☆☆";
+			} else if(avgscore_boss < 6) {
+				avgscore_boss = "★★★☆☆";
+			} else if(avgscore_boss < 8) {
+				avgscore_boss = "★★★★☆";
+			} else if(avgscore_boss < 10) {
+				avgscore_boss = "★★★★★";
+			}
+			if(avgscore_worker == "undefined") {
+				avgscore_worker = "";
+			} else if(avgscore_worker < 2) {
+				avgscore_worker = "★☆☆☆☆";
+			} else if(avgscore_worker < 4) {
+				avgscore_worker = "★★☆☆☆";
+			} else if(avgscore_worker < 6) {
+				avgscore_worker = "★★★☆☆";
+			} else if(avgscore_worker < 8) {
+				avgscore_worker = "★★★★☆";
+			} else if(avgscore_worker < 10) {
+				avgscore_worker = "★★★★★";
+			}
+			if(avgscore_worker == "undefined") {
+				avgscore_worker = "";
+			}
+			document.getElementById("person").innerHTML = "工人：" + avgscore_worker;
+			document.getElementById("boss").innerHTML = "工长：" + avgscore_boss;
+
+			if(skills == "undefined" || skills == null || skills == "") {
+				skills = "暂未习得";
+			}
+			document.getElementById("skills").innerHTML = "技能：" + skills;
+			console.log(skills);
+
+			if(beans == "undefined" || beans == null) {
+				beans = "";
+			}
+			document.getElementById("bean").innerHTML = "今日可接单：" + beans;
+
+			if(sex == "undefined") {
+				sex = "未添加信息";
+			}
+			if(address_home == "undefined") {
+				address_home = "未添加信息";
+			}
+			if(address_company == "undefined") {
+				address_company = "未添加信息";
+			}
+			if(wechat == "undefined") {
+				wechat = "未添加信息";
+			}
+			if(phone == "undefined") {
+				phone = "未添加信息";
+			}
+			if(beans == "undefined" || beans == null) {
+				beans = "未查到信息";
+			}
+			if(is_vip == "undefined") {
+				is_vip = "未添加信息";
+			}
+			if(avgscore_boss == "undefined") {
+				avgscore_boss = "未添加信息";
+			}
+			if(avgscore_worker == "undefined") {
+				avgscore_worker = "未添加信息";
+			}
+
+			settitle();
+
+		}())
+
+		function settitle() {
+			var user_id = localStorage.getItem("user_id");
+			console.log("userididid" + user_id);
+			jQuery.ajax({
+				contentType: "application/json",
+				type: "GET",
+				url: url_1 + "get_UserMes.do?jsoncallback=?",
+				data: "user_id=" + user_id,
+				dataType: "json",
+				success: function(data) {
+					console.log(data.user);
+					console.log("qeqe" + data.user.headPortrait_url);
+					localStorage.setItem("headPortrait_url", data.user.headPortrait_url);
+					if(data.user.headPortrait_url==undefined){
+					document.getElementById("head-img1").src = "../images/loge.jpg";
+					}
+				},
+				error: function() {
+					alert("网络连接出错！");
+				}
+			});
+		}
+
+		function set() {
+			var w = plus.webview.open("setting.html");
+
+		}
+
+		function getorder() {
+			var baseUrl = '../order/getorder.html';
+			var url = mui.os.plus ? baseUrl : baseUrl;
+			mui.openWindow({
+				url: url
+			})
+		}
+
+		function historyorder() {
+			var baseUrl = '../order/historyorder.html';
+			var url = mui.os.plus ? baseUrl : baseUrl;
+			mui.openWindow({
+				url: url,
+				createNew: true
+			})
+		}
+
+		function person_realname() {
+			var baseUrl = 'person_realname.html';
+			var url = mui.os.plus ? baseUrl : baseUrl;
+			mui.openWindow({
+				url: url
+			})
+		}
+
+		function company_realname() {
+			var baseUrl = 'company_realname.html';
+			var url = mui.os.plus ? baseUrl : baseUrl;
+			mui.openWindow({
+				url: url
+			})
+		}
+
+		function myinfo() {
+			var baseUrl = 'myinfo.html';
+			var url = mui.os.plus ? baseUrl : baseUrl;
+			mui.openWindow({
+				url: url
+			})
+		}
+
+		function company() {
+			var baseUrl = 'setting.html';
+			var url = mui.os.plus ? baseUrl : baseUrl;
+			mui.openWindow({
+				url: url
+			})
+		}
+
+		//更换头像
+		mui(".mui-table-view-cell").on("tap", "#head", function(e) {
+			if(mui.os.plus) {
+				var a = [{
+					title: "拍照"
+				}, {
+					title: "从手机相册选择"
+				}];
+				plus.nativeUI.actionSheet({
+					title: "修改头像",
+					cancel: "取消",
+					buttons: a
+				}, function(b) {
+					switch(b.index) {
+						case 0:
+							break;
+						case 1:
+							getImage();
+							break;
+						case 2:
+							galleryImg();
+							break;
+						default:
+							break
+					}
+				})
+			}
+
+		});
+
+		function getImage() {
+			var c = plus.camera.getCamera();
+			c.captureImage(function(e) {
+				plus.io.resolveLocalFileSystemURL(e, function(entry) {
+					var s = entry.toLocalURL() + "?version=" + new Date().getTime();
+					console.log(s);
+					//					document.getElementById("head-img").src = s;
+					document.getElementById("head-img1").src = s;
+					upload_head(s);
+					upload();
+					//					localStorage.setItem("headPortrait_url",s);
+					//变更大图预览的src
+					//目前仅有一张图片，暂时如此处理，后续需要通过标准组件实现
+					document.querySelector("#__mui-imageview__group .mui-slider-item img").src = s + "?version=" + new Date().getTime();;;
+				}, function(e) {
+					console.log("读取拍照文件错误：" + e.message);
+				});
+			}, function(s) {
+				console.log("error" + s);
+			}, {
+				filename: "_doc/head.jpg"
+			})
+		}
+
+		function galleryImg() {
+			plus.gallery.pick(function(a) {
+				plus.io.resolveLocalFileSystemURL(a, function(entry) {
+					plus.io.resolveLocalFileSystemURL("_doc/", function(root) {
+						root.getFile("head.jpg", {}, function(file) {
+							//文件已存在
+							file.remove(function() {
+								console.log("file remove success");
+								entry.copyTo(root, 'head.jpg', function(e) {
+										var e = e.toLocalURL() + "?version=" + new Date().getTime();
+										//										document.getElementById("head-img").src = e;
+										document.getElementById("head-img1").src = e;
+										upload_head(e);
+										console.log(e);
+										upload();
+										//					                    localStorage.setItem("headPortrait_url",e);
+										//变更大图预览的src
+										//目前仅有一张图片，暂时如此处理，后续需要通过标准组件实现
+										document.querySelector("#__mui-imageview__group .mui-slider-item img").src = e + "?version=" + new Date().getTime();;
+									},
+									function(e) {
+										console.log('copy image fail:' + e.message);
+									});
+							}, function() {
+								console.log("delete image fail:" + e.message);
+							});
+						}, function() {
+							//文件不存在
+							entry.copyTo(root, 'head.jpg', function(e) {
+									var path = e.toLocalURL() + "?version=" + new Date().getTime();
+									//									document.getElementById("head-img").src = path;
+									document.getElementById("head-img1").src = path;
+									//变更大图预览的src
+									//目前仅有一张图片，暂时如此处理，后续需要通过标准组件实现
+									document.querySelector("#__mui-imageview__group .mui-slider-item img").src = path;
+								},
+								function(e) {
+									console.log('copy image fail:' + e.message);
+								});
+						});
+					}, function(e) {
+						console.log("get _www folder fail");
+					})
+				}, function(e) {
+					console.log("读取拍照文件错误：" + e.message);
+				});
+			}, function(a) {}, {
+				filter: "image"
+			})
+		};
+
+		function defaultImg() {
+			if(mui.os.plus) {
+				plus.io.resolveLocalFileSystemURL("_doc/head.jpg", function(entry) {
+					headPortrait_url = localStorage.getItem("headPortrait_url");
+					var s = pic_1 + headPortrait_url;
+					console.log("headPortrait_url:" + headPortrait_url);
+					document.getElementById("head-img1").src = s;
+					if(headPortrait_url==undefined||headPortrait_url!=" "){ 
+			          document.getElementById("head-img1").src="../images/loge.jpg";
+			        }
+ 
+				}, function(e) {
+
+				})
+			} else {
+
+			}
+
+		}
+		document.getElementById("head-img1").addEventListener('tap', function(e) {
+			e.stopPropagation();
+		});
+
+		setTimeout(function() {
+			console.log("退出");
+			defaultImg();
+			setTimeout(function() {
+				initImgPreview();
+			}, 1000);
+		}, 1000);
+
+		function upload_head(p) {
+			files1.push({
+				name: "uploadkey",
+				path: p
+			});
+		}
+
+		function initImgPreview() {
+			var imgs = document.querySelectorAll("img.mui-action-preview");
+			imgs = mui.slice.call(imgs);
+			if(imgs && imgs.length > 0) {
+				var slider = document.createElement("div");
+				slider.setAttribute("id", "__mui-imageview__");
+				slider.classList.add("mui-slider");
+				slider.classList.add("mui-fullscreen");
+				slider.style.display = "none";
+				slider.addEventListener("tap", function() {
+					slider.style.display = "none";
+				});
+				slider.addEventListener("touchmove", function(event) {
+					event.preventDefault();
+				})
+				var slider_group = document.createElement("div");
+				slider_group.setAttribute("id", "__mui-imageview__group");
+				slider_group.classList.add("mui-slider-group");
+				imgs.forEach(function(value, index, array) {
+					//给图片添加点击事件，触发预览显示；
+					value.addEventListener('tap', function() {
+						slider.style.display = "block";
+						_slider.refresh();
+						_slider.gotoItem(index, 0);
+					})
+					var item = document.createElement("div");
+					item.classList.add("mui-slider-item");
+					var a = document.createElement("a");
+					var img = document.createElement("img");
+					img.setAttribute("src", value.src);
+					a.appendChild(img)
+					item.appendChild(a);
+					slider_group.appendChild(item);
+				});
+				slider.appendChild(slider_group);
+				document.body.appendChild(slider);
+				var _slider = mui(slider).slider();
+			}
+		}
+
+		// 上传图片和信息
+		function upload() {
+			var user_id = localStorage.getItem("user_id");
+			console.log("user_id:" + user_id);
+			var wt = plus.nativeUI.showWaiting();
+			var task = plus.uploader.createUpload(server, {
+					method: "POST"
+				},
+				function(t, status) { //上传完成
+					console.log(t.responseText);
+					if(t.responseText == 'null({"flag":"0"})') {
+						mui.alert("头像保存失败");
+						wt.close();
+					} else
+					if(t.responseText == 'null({"flag":"1"})') {
+						mui.alert("头像保存 成功");
+						wt.close();
+					} else {
+						mui.alert("上传失败");
+						wt.close();
+					}
+				}
+			);
+			task.addData("user_id", user_id);
+			var f1 = files1[files1.length - 1];
+			task.addFile(f1.path, {
+				key: "image_01"
+			});
+			task.start();
+		}
+	</script>
+
+</html>

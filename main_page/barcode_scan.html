@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<title>Barcode Example</title>
+		<link rel="stylesheet" href="../css/mui.min.css"/>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript">
+//			// 扩展API加载完毕后调用onPlusReady回调函数 
+//			document.addEventListener("plusready", onPlusReady, false);
+//			// 扩展API加载完毕，现在可以正常调用扩展API
+//			function onPlusReady() {
+//				var e = document.getElementById("scan");
+//				e.removeAttribute("disabled");
+//			}
+			var scan = null;
+			function onmarked(type, result) {
+				var text = '未知: ';
+				switch(type) {
+					case plus.barcode.QR:
+						text = 'QR: ';
+						break;
+					case plus.barcode.EAN13:
+						text = 'EAN13: ';
+						break;
+					case plus.barcode.EAN8:
+						text = 'EAN8: ';
+						break;
+				}
+				alert(text + result);
+			}
+
+			function startRecognize() {
+				scan = new plus.barcode.Barcode('bcid');
+				scan.onmarked = onmarked;
+				scan.start();
+			}
+			setTimeout('startRecognize()',500);
+		</script>
+		<style type="text/css">
+			html,
+			body {
+				margin: 0px;
+				padding: 0px;
+				height: 100%;
+			}
+			
+			#bcid {
+				background: #000000;
+				margin-top: 10%;
+				height: 100%;
+				width: 100%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">扫一扫</h1>
+		</header>
+		<div id="bcid"></div>
+		<!--<input type='button' class="mui-btn-blue" style="margin-left: 30%;margin-top: 10%;" onclick='startRecognize()' value='开始扫描' />-->
+		<!--<input type='button' onclick='startScan()' value='开始扫描' />-->
+		<!--<input type='button' class="mui-btn-blue" style="margin-top: 10%;" onclick='cancelScan()' value='取消扫描' />-->
+		
+	</body>
+
+</html>

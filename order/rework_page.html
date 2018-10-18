@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<!--App自定义的css-->
+		<link rel="stylesheet" type="text/css" href="../css/mui.picker.min.css" />
+		<script src="../js/urlconfiguration.js"></script>
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+				overflow: hidden;
+			}
+			
+			.mui-locker {
+				margin: 35px auto;
+			}
+			
+			#forget {
+				display: block;
+				margin-top: 10px;
+				text-align: center;
+			}
+			
+			h5 {
+				margin-top: 10px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-icon mui-icon-left-nav mui-pull-left" href="getorder1.html"></a>
+			<h1 class="mui-title">返工</h1>
+		</header>
+		<div id="" style="height: 50px;"></div>
+		<div id="" style="background: white;height: 250px;">
+			<div>
+				<!--<h5>请叙述需要返工的原因：</h5>-->
+				<textarea id="rework_resone" name="a" style="width:100%;height:100px;border: none;" placeholder="请叙述需要返工的原因"></textarea>
+			</div>
+			<div id="imgshow" style="background: white;">
+				<form id="uploadForm" enctype="multipart/form-data">
+					<img id="pic1" src="../images/iconfont-tianjia.png" style="width: 100px;height: 100px;float: left;display: ">
+					<input id="upload1" src="../images/iconfont-tianjia.png" name="file1" accept="image/*" type="file" style="display: none" />
+					<img id="pic2" src="../images/iconfont-tianjia.png" style="width: 100px;height: 100px;float: left;display: none">
+					<input id="upload2" src="../images/iconfont-tianjia.png" name="file2" accept="image/*" type="file" style="display: none" />
+					<img id="pic3" src="../images/iconfont-tianjia.png" style="width: 100px;height: 100px;float: left;display: none">
+					<input id="upload3" src="../images/iconfont-tianjia.png" name="file3" accept="image/*" type="file" style="display: none" />
+			</div>
+		</div>
+
+		<div style="background: white;height: 60px;margin-top: 20px;">
+			<h5 style="float: left;width: 100%;margin-left: 10%;">发送至：</h5>
+			<h5 id="people" style="float: right;margin-right: 10%;">李师傅</h5>
+		</div>
+		<div class="mui-button-row">
+			<button class="mui-btn-primary" type="button" onclick="upload()">保存上传</button>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-1.6.2.min.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
+		<script src="http://lib.sinaapp.com/js/jquery/1.12.4/jquery-1.12.4.min.js"></script>
+		<script type="text/javascript">
+			var files = [];
+			// 上传图片和信息
+			function upload() {
+				mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						var jobitem_user_id = self.button_id;
+						var server = url_3 + "end_request_rework.do?"
+						//				var w = plus.nativeUI.showWaiting("处理中，请等待...\n");
+						console.log(jobitem_user_id);
+						var rework_resone = document.getElementById("rework_resone").value;
+						if(files.length <= 0) {
+							//					w.close();
+							plus.nativeUI.alert("请添加照片！");
+							return;
+						}
+						var wt = plus.nativeUI.showWaiting();
+						var task = plus.uploader.createUpload(server, {
+								method: "POST"
+							},
+							function(t, status) { //上传完成
+								if(t.responseText == '{"flag":"0"}') {
+									//							 w.close();
+									mui.alert("失败");
+								}
+								if(t.responseText == '{"flag":"1"}') {
+									//							w.close();
+									mui.alert("成功");
+									var w = plus.webview.create("getorder.html", "getorder.html", {
+										scrollIndicator: 'none',
+										scalable: false
+									});
+									w.addEventListener("loaded", function() {
+										wt.close();
+										w.show("slide-in-right", 300);
+									}, false);
+								} else {
+									mui.alert("上传失败：" + status);
+									//							wt.close();
+								}
+							}
+						);
+						task.addData("memo", rework_resone);
+						task.addData("jobitem_user_id", jobitem_user_id.toString());
+						var f1 = files[files.length - 1];
+						task.addFile(f1.path, {
+							key: "img_url"
+						});
+						task.start();
+					})
+}
+				function photo() {
+					if(mui.os.plus) {
+						var a = [{
+							title: "拍照"
+						}, {
+							title: "从手机相册选择"
+						}];
+						plus.nativeUI.actionSheet({
+							title: "照片上传",
+							cancel: "取消",
+							buttons: a
+						}, function(b) { /*actionSheet 按钮点击事件*/
+							switch(b.index) {
+								case 0:
+									break;
+								case 1:
+									appendByCamera(); /*拍照*/
+									break;
+								case 2:
+									appendByGallery(); /*打开相册*/
+									break;
+								default:
+									break;
+							}
+						})
+					}
+				}
+				// 拍照添加文件
+				function appendByCamera() {
+					plus.camera.getCamera().captureImage(function(p) {
+						appendFile(p);
+					});
+				}
+				// 从相册添加文件
+				function appendByGallery() {
+					plus.gallery.pick(function(p) {
+						appendFile(p);
+					});
+				}
+				// 向files[]中添加照片
+				var index = 1;
+
+				function appendFile(p) {
+					files.push({
+						name: "uploadkey" + index,
+						path: p
+					});
+					$("#pic1").attr("src", p);
+
+					index++;
+				}
+				$(function() {
+					$("#pic1").click(function() {
+						photo();
+					});
+				});
+		</script>
+
+	</body>
+
+</html>

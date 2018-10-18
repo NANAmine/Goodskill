@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html class="ui-page-login">
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+		</style>
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">我的接单</h1>
+		</header>
+		<div id="count_down" class=" mui-table-view" style="width: 100%;margin-top: 10%;">
+			<ul class=" mui-table-view " id="show">
+			</ul>
+		</div>
+
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/jquery-1.6.2.min.js"></script>
+	<script src="../js/urlconfiguration.js"></script>
+	<script>
+		var user_id = localStorage.getItem("user_id");
+		var rework_status = [];
+		var jobitem_user_id = [];
+		//加载页面我的订单    
+		(function($, doc) {
+			$.init();
+			$.plusReady(function() {
+				var w = plus.nativeUI.showWaiting("处理中，请等待...\n");
+				jQuery.ajax({
+					contentType: "application/json",
+					type: "GET",
+					url: url_3 + "show_jobitem_users.do?jsoncallback=?",
+					data: "user_id=" + user_id,
+					dataType: "json",
+					success: function(data) {
+						if(data.msg != null) {
+							if(data.msg.length == 0) {
+								mui.alert("暂无订单信息！");
+							} else {
+								for(i = 0; i < data.msg.length; i++) {
+									if(data.msg[i].jobitem_user.jobitem.jobitem_status != -2 && data.msg[i].jobitem_user.jobitem.jobitem_status != -1) {
+										var state, button;
+										var flag = 1;
+										var start_time;
+										rework_status[i] = data.msg[i].jobitem_user.rework_status;
+										console.log(data.msg[i].jobitem_user.rework_status);
+										console.log(data.msg[i].jobitem_user.jobitem.jobitem_status);
+										jobitem_user_id[i] = data.msg[i].jobitem_user.id;
+										if(data.msg[i].jobitem_user.jobitem_status == 2) {
+											state = "已被抢";
+											button = "删除";
+										} else {
+											if(data.msg[i].jobitem_user.jobitem.jobitem_status == 2) {
+												state = "等待工长确认中";
+												button = "退单";
+											}
+											if(data.msg[i].jobitem_user.jobitem.jobitem_status == 3) {
+												state = "等待工长开工";
+												button = "退单";
+											}
+
+											if(data.msg[i].jobitem_user.jobitem.jobitem_status == 5) {
+												state = "工长请求开工";
+												button = "确认开工";
+											}
+											if(data.msg[i].jobitem_user.jobitem.jobitem_status == 5 && data.msg[i].jobitem_user.rework_status == 1) {
+												state = "工长请求返工";
+												button = "确认开工";
+											}
+
+											if(data.msg[i].jobitem_user.jobitem.jobitem_status == 1) {
+												state = "施工中";
+												button = "请求完工";
+											}
+											if(data.msg[i].jobitem_user.jobitem.jobitem_status == 1 && data.msg[i].jobitem_user.rework_status == 1) {
+												state = "返工中";
+												button = "请求完工";
+											}
+											if(data.msg[i].jobitem_user.jobitem.jobitem_status == 4) {
+												state = "工程等待工长验收";
+												button = "24小时倒计时自动确认";
+											}
+
+										}
+										if(data.msg[i].jobitem_user.jobitem.job.decoration_type == 1) {
+											house = "毛坯";
+										} else {
+											house = "旧房改造";
+										}
+										if(data.msg[i].jobitem_user.unit == 1) {
+											unit = "平米";
+										} else {
+											unit = "延米";
+										}
+										if(data.msg[i].jobitem_user.jobitem.pre_start_date == undefined) {
+											start_time = "未添加";
+										} else {
+											start_time = data.msg[i].jobitem_user.jobitem.pre_start_date;
+										}
+										jQuery("#show").append('<li class="mui-card" id="show_' + i + '" style="display:;background-color:" >' +
+											'<table border="0" width="100%"><tr><td height="2px" colspan="2"></td></tr><tr><td width="5px"></td><td align="right" class=" mui-badge mui-badge-blue"><h4>' + data.msg[i].jobitem_user.jobitem.jobtype.name + '</h4></td><td ><h3>' + data.msg[i].jobitem_user.jobitem.job.community + '</h3></td><td></td><td class="mui-badge mui-badge-green" id="urgent_fee_' + data.msg[i].jobitem_user.jobitem.id + '" style="display: none;">加急费:' + data.msg[i].jobitem_user.jobitem.urgent_fee + '</td></tr></table>' +
+											'<table><tr id="show' + i + '">&nbsp;&nbsp;&nbsp;<td style="margin-left: 20%;">&nbsp;&nbsp;&nbsp;技能:</td></tr></table>' +
+											'<table><tr><td align="left" width="70%">&nbsp;&nbsp;&nbsp;面积：' + data.msg[i].jobitem_user.jobitem.area + unit + '</td>' +
+											'<td width="30%" >酬劳：' + data.msg[i].jobitem_user.jobitem.salary + '元</td></tr>' +
+											'<tr><td align="left" width="20%" >&nbsp;&nbsp;&nbsp;房屋类型：' + house + '</td></tr>' +
+											'<tr><td align="left" width="20%">&nbsp;&nbsp;&nbsp;预计开工时间：' + start_time + '</td></tr></table>' +
+											'<table class="mui-pull-right" style="margin-bottom: 2%;"><tr><td><input type="submit" value="详情" class="mui-pull-right" onclick="order_info(' + data.msg[i].jobitem_user.jobitem.id + ',' + data.msg[i].jobitem_user.jobitem.job.user.id + ',' + flag + ')"></td>' +
+											'<td>&nbsp;<input type="submit" id="submit_' + i + '" value=' + button + ' class="mui-pull-right" onclick="submit_onclick(' + i + ')"></td></tr></table>' +
+											'</li>');
+										for(z = 0; z < data.msg[i].skills.length; z++) {
+											jQuery("#show" + i).append(
+												'<td id="p' + data.msg[i].skills[z].id + 'Style" class="mui-pull-left mui-badge mui-badge-green">' + data.msg[i].skills[z].name + '&nbsp;</td>'
+											);
+											if(data.msg[i].jobitem_user.jobitem.urgent_fee != 0) {
+												document.getElementById("urgent_fee_" + data.msg[i].jobitem_user.jobitem.id).setAttribute("style", "display: ;");
+											}
+										}
+									}
+								}
+							}
+							w.close();
+						}else{
+							mui.alert("暂无订单信息！");
+							w.close();
+						}
+						
+
+					},
+					error: function() {
+						w.close();
+						alert("网络连接出错！");
+					}
+				});
+			});
+		})(mui, document);
+
+		function submit_onclick(button_id) {
+			if($("#submit_" + button_id).val() == "删除") {
+				var info = document.getElementById("info");
+				var btnArray = ['否', '是'];
+				mui.confirm('是否删除订单，确认？', '提示', btnArray, function(e) {
+					if(e.index == 1) {
+						delete_order(button_id);
+						beans();
+					}
+				})
+
+			}
+			if($("#submit_" + button_id).val() == "退单") {
+				var info = document.getElementById("info");
+				var btnArray = ['否', '是'];
+				mui.confirm('是否取消订单，确认？', '提示', btnArray, function(e) {
+					if(e.index == 1) {
+						delete_order(button_id);
+						beans();
+					}
+				})
+
+			}
+			if($("#submit_" + button_id).val() == "请求完工") {
+				var info = document.getElementById("info");
+				var btnArray = ['否', '是'];
+				mui.confirm('是否完工，确认？', '提示', btnArray, function(e) {
+					if((e.index == 1) && (rework_status[button_id] == 1)) {
+						rework_page(button_id);
+					} else {
+						if(e.index == 1) {
+							finish_work(button_id);
+						}
+					}
+				})
+			}
+			if($("#submit_" + button_id).val() == "确认开工") {
+				var info = document.getElementById("info");
+				var btnArray = ['否', '是'];
+				mui.confirm('是否开工，确认？', '提示', btnArray, function(e) {
+					if(e.index == 1) {
+						start_work(button_id);
+					}
+				})
+
+			}
+
+		}
+
+		//beans获取
+		function beans() {
+			$.ajax({
+				contentType: "application/json",
+				type: "GET",
+				url: url_1 + "get_UserMes.do?jsoncallback=?",
+				data: "user_id=" + user_id,
+				dataType: "json",
+				success: function(data) {
+					localStorage.setItem("beans", data.user.beans);
+//					beans = localStorage.getItem("beans");
+					console.log("beans" + data.user.beans);
+				},
+				error: function() {
+					console.log("1");
+					alert("网络连接出错！");
+				}
+			})
+		}
+
+		//删除订单
+		function delete_order(button_id) {
+			var w = plus.nativeUI.showWaiting("处理中，请等待...\n");
+			w.close();
+			var i = button_id;
+			$.ajax({
+				contentType: "application/json",
+				type: "get",
+				url: url_3 + "delete_jobitem_user.do?jsoncallback=?",
+				data: "jobitem_user_id=" + jobitem_user_id[i],
+				dataType: "json",
+				success: function(data) {
+					w.close();
+					location.reload(); //刷新页面
+				},
+				error: function(data) {
+					w.close();
+					alert(data);
+					alert("网络连接出错！");
+				}
+			});
+
+		}
+
+		//返工页面跳转
+		function rework_page(button_id) {
+			var i = button_id;
+			var baseUrl = 'rework_page.html';
+			var url = mui.os.plus ? baseUrl : baseUrl + '?button_id=' + jobitem_user_id[i];
+			mui.openWindow({
+				url: url,
+				extras: {
+					button_id: jobitem_user_id[i],
+				}
+			})
+		}
+
+		//工人请求结束工作
+		function finish_work(button_id) {
+			var w = plus.nativeUI.showWaiting("处理中，请等待...\n");
+			var i = button_id;
+			$.ajax({
+				contentType: "application/json",
+				type: "get",
+				url: url_3 + "end_request.do?jsoncallback=?",
+				data: "jobitem_user_id=" + jobitem_user_id[i],
+				dataType: "json",
+				success: function(data) {
+					w.close();
+					location.reload(); //刷新页面
+				},
+				error: function(data) {
+					w.close();
+					alert(data);
+					alert("网络连接出错！");
+				}
+			});
+
+		}
+		
+		//查看工作详细信息
+		function order_info(jobitem_id, boss_id, flag) {
+			console.log("order_info:发布订单id" + jobitem_id);
+			console.log("工长id" + boss_id);
+			var baseUrl = 'order_info.html';
+			var url = mui.os.plus ? baseUrl : baseUrl + '?jobitem_id=' + jobitem_id + '?boss_id' + boss_id + "?flag" + flag;
+			mui.openWindow({
+				url: url,
+				extras: {
+					jobitem_id: jobitem_id,
+					boss_id: boss_id,
+					flag: flag,
+				}
+
+			})
+		}
+
+		//工人确认开工
+		function start_work(button_id) {
+			var w = plus.nativeUI.showWaiting("处理中，请等待...\n");
+			$.ajax({
+				contentType: "application/json",
+				type: "get",
+				url: url_3 + "start_response.do?jsoncallback=?",
+				data: "jobitem_user_id=" + jobitem_user_id[button_id],
+				dataType: "json",
+				success: function(data) {
+					w.close();
+					location.reload(); //刷新页面
+				},
+				error: function(data) {
+					w.close();
+					alert(data);
+					alert("网络连接出错！");
+				}
+			});
+
+		}
+	</script>
+
+</html>

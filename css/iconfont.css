@@ -1,0 +1,37 @@
+
+@font-face {
+	font-family: "iconfont";
+	src: url('../fonts/iconfont.eot?#iefix') format('embedded-opentype'),
+  url('../fonts/iconfont.woff') format('woff'),
+  url('../fonts/iconfont.ttf') format('truetype'),
+  url('../fonts/iconfont.svg#iconfont') format('svg');
+}
+
+.iconfont {
+  font-family:"iconfont" !important;
+  font-size:24px;
+  font-weight: normal;
+  font-style:normal;
+  color:#0062CC;
+  line-height: 1;
+  display: inline-block;
+  text-decoration: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.icon-dashuazi:before { content: "\e603"; }
+
+.icon-gongjuxiang:before { content: "\e604"; }
+
+.icon-guadao:before { content: "\e605"; }
+
+.icon-huabi:before { content: "\e606"; }
+
+.icon-shigao:before { content: "\e607"; }
+
+.icon-shuitong:before { content: "\e608"; }
+
+.icon-shuazi:before { content: "\e609"; }
+
+.icon-xiaorener:before { content: "\e60a"; }
+

@@ -1,0 +1,74 @@
+{"msg":[{
+	"id":"3",
+	"jobtype":"电工",
+	"status":"0",
+	"rework_status": 0,
+	"talent":[{"name":"装灯"},{"name":"接电"}],
+	"user":[{
+		"id":"4",
+		"user_id":"2",
+		"name":"张二",
+		"level":"0",
+		"talent":[{"name":"接水管"}],
+		"phone":"13123456788",
+		"jobitem_status":"0",
+		"status":"0"
+		},{
+		"id":"9",
+		"user_id":"3",
+		"name":"张三",
+		"level":"0",
+		"talent":[{"name":"接电"}],
+		"phone":"13123456787",
+		"jobitem_status":"0",
+		"status":"0"}]
+	},{
+	"id":"4",
+	"jobtype":"水工",
+	"status":"0",
+	"rework_status": 0,
+	"talent":[{"name":"装灯"},{"name":"接水管"}],
+	"user":[{
+		"id":"3",
+		"user_id":"1",
+		"name":"张一",
+		"level":"0",
+		"talent":[{"name":"装灯"},{"name":"接电"}],
+		"phone":"13123456789",
+		"jobitem_status":"1",
+		"status":"1"
+		}]}
+		,{
+	"id":"5",
+	"jobtype":"水工",
+	"status":"0",
+	"rework_status": 0,
+	"talent":[{"name":"装灯"},{"name":"接水管"}],
+	"user":[{
+		"id":"3",
+		"user_id":"1",
+		"name":"张一",
+		"level":"0",
+		"talent":[{"name":"装灯"},{"name":"接电"}],
+		"phone":"13123456789",
+		"jobitem_status":"1",
+		"status":"2"
+		}]}
+		,{
+	"id":"6",
+	"jobtype":"水工",
+	"status":"0",
+	"rework_status": 0,
+	"talent":[{"name":"装灯"},{"name":"接水管"}],
+	"user":[{
+		"id":"3",
+		"user_id":"1",
+		"name":"张一",
+		"level":"0",
+		"talent":[{"name":"装灯"},{"name":"接电"}],
+		"phone":"13123456789",
+		"jobitem_status":"1",
+		"status":"3"
+		}]}
+	]
+}

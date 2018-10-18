@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>1</title>
+		<!--App自定义的css-->
+		<link rel="stylesheet" type="text/css" href="../css/app.css" />
+		<link href="../css/mui.picker.css" rel="stylesheet" />
+		<link href="../css/mui.poppicker.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="../css/mui.picker.min.css" />
+
+		<style>
+			.radio_inline {
+				display: inline-block;
+				width: 100%;
+			}
+			
+			.radio_inline label {
+				width: 40%;
+				padding-left: 40px;
+				padding-right: 10px;
+			}
+			
+			.radio_inline input[type=radio] {
+				width: 15%;
+				right: auto;
+			}
+			
+			.mui-btn {
+				font-size: 16px;
+				padding: 8px;
+				margin: 3px;
+			}
+			
+			h5.mui-content-padded {
+				margin-left: 1px;
+				margin-top: 20px !important;
+			}
+			
+			h5.mui-content-padded:first-child {
+				margin-top: 12px !important;
+			}
+			
+			.ui-alert {
+				text-align: center;
+				padding: 20px 10px;
+				font-size: 16px;
+			}
+			
+			span {
+				font-weight: normal;
+				margin-top: 10px;
+				line-height: 1em;
+				display: block;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a id="mui_back" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">发布工作</h1>
+		</header>
+		<div id="" style="height: 50px;">
+
+		</div>
+		<div class="mui-content">
+			<div class="mui-content-padded">
+
+				<!--********************任務信息*************************************************************-->
+
+				<span class="mui-content-padded" style="margin-top:;width: ;">工作地址</span>
+				<button id='ShowWorkCity' class="mui-btn mui-btn-block" type='button' style="margin-top: 10px;width: 93%;margin-left: 3%;">选择施工地点</button>
+
+				<span class="mui-content-padded" style="margin-top:20px;width: ;">预计开工时间</span>
+				<button id='ShowWorkDay' class="btn mui-btn mui-btn-block" type='button' style="margin-top: 10px;width: 93%;margin-left: 3%;">选择日期 </button>
+
+				<span class="mui-content-padded" style="margin-top:20px;">工作类别</span>
+				<div id="" style="width: 100%;float: left;">
+					<div class="mui-input-row ">
+
+						<span class="radio_inline mui-radio" style="margin-left: 15%;margin-top: 10px;">
+                            <input name="radio" type="radio" id="radio_man" checked value="1">
+                            <label for="radio_man">毛坯装修</label>
+                            <input name="radio" type="radio" id="radio_woman" value="0">     
+                            <label for="radio_woman">旧房改造</label>        
+                        </span>
+					</div>
+				</div>
+				<div>
+
+					<span class="mui-content-padded" style="margin-top:80px ;">输入详细地址<span>
+					<div><input id="ShowWorkCityMore" style="margin-top: 10px;" type="text" placeholder="例：康乐花园小区"  onfocus="updatetitle(this)" onblur="settitle(this)"></div>
+					<div class="auto_hidden" style="background: white;" id="auto">
+					</div>
+
+					<div>
+						<button id="selectworktype" class="mui-btn mui-btn-block " style="margin-top: 10px;margin-left: 0px;" type='button'>选择工种</button>
+					</div>
+					<span class="mui-content-padded" style="margin-top: 20px;margin-left:0;">技能标签</span>
+
+					<div id="skill" style="margin-left: 10%;">
+
+						<div style="width: 100%;float: ;margin-top: 10px;visibility:hidden;">
+							<input type="checkbox" value="" />
+						</div>
+					</div>
+
+					<!--占位隐藏-->
+					<div id="" class="mui-input-row" style="margin-top: 20px; width: 100%;float: left;">
+						<label style="text-align:center;margin-left: -9%;">施工量</label><input style="text-align: center;background: #FFFFFF;border:1px solid gainsboro;width: 70%;" id="workload" type="number" placeholder="输入施工面积" onblur="settitle(this)" onfocus="updatetitle(this)" />
+					</div>
+					<div class="mui-input-row ">
+
+						<span class="radio_inline mui-radio" style="margin-left: 15%;">
+                            <input name="radiounit" type="radio" id="radio_man" checked value="1">
+                            <label for="radio_1">平米</label>
+                            <input name="radiounit" type="radio" id="radio_woman" value="0">     
+                            <label for="radio_2">延米</label>        
+                        </span>
+					</div>
+
+					<div id="" class="mui-input-row" style="margin-top: 10px;width: 100%;float: left;">
+						<label style="text-align: center;margin-left: -11%;">薪水</label><input style="text-align: center;background: #FFFFFF;border:1px solid gainsboro;width: 70%;" id="onemoney" type="number" placeholder="输入薪水" onfocus="updatetitle(this)" onblur="settitle(this)" />
+					</div>
+
+					<div id="ceshi" style="margin-top: 70px;width: 100%;">
+
+						<span id="jiajijine" style="text-align: center;">加急金额：0元</span>
+					</div>
+					<div id="buttonstyle" style="margin-top: 20px;width: 100%;float: left;">
+						<button id="submited" type="button" class="mui-btn mui-btn-primary  " style="width: 30%;margin-left: 15%;" onclick="publish()">发布</button>
+						<button id="UrgentPublish" type="button" class="mui-btn mui-btn-primary  " style="width: 30%;margin-left: 10%;" onclick="urgepublish()">加急发布</button>
+					</div>
+				</div>
+				<br /><br />
+			</div>
+		</div>
+
+		<script src="../js/urlconfiguration.js"></script>
+		<script src="../js/istext.js"></script>
+		<script src="../js/jquery-1.6.2.min.js"></script>
+		<script src="../js/mui.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
+		<script src="../js/mui.picker.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script src="../js/city.data.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/city.data-3.js" type="text/javascript" charset="utf-8"></script>
+
+		<!--<script src="../js/myadd.js"></script>-->
+		<script>
+			var worktypeformjson = [];
+			var urgency;
+			var category;
+			var moneyunit;
+			var workunit;
+			var selectedaddress;
+			var selectedcity;
+			var selectedtype;
+			var selectedskills = "";
+			var workload;
+			var selectedsalary;
+			var skilllength;
+			var skillid = [];
+			var operation = 0;
+			var updataid = 0;
+			var checkHTML = 0; //检测下拉列表是否备选过，应用于检测信息是否填充完善
+			var jobitem_id;
+			var job_id;
+			var urgent_fee = 0;
+			var urgent_status = 0;
+			var worktypeandskills = [];
+
+			(function($, doc) {
+					$('#scroll').scroll({
+						indicators: true //是否显示滚动条
+					});
+					//初始化下级页面
+					$.init({
+						swipeBack: true //启用右滑关闭功能
+					});
+					var ShowWorkDay = $('#ShowWorkDay'); ///日期
+					ShowWorkDay.each(function(i, btn) {
+						btn.addEventListener('tap', function() {
+							var _self = this;
+							var optionsJson = '{"type":"date","beginYear":2015,"endYear":2050}';
+							var options = JSON.parse(optionsJson);
+							var id = this.getAttribute('id');
+							_self.picker = new $.DtPicker(options);
+							_self.picker.show(function(rs) {
+								ShowWorkDay[0].innerText = rs.text;
+
+								_self.picker.dispose();
+								_self.picker = null;
+							});
+						}, false);
+					});
+					$.plusReady(function() {
+						/*var old_back = mui.back;
+								mui.back = function() {
+									var wobj = plus.webview.getWebviewById("../myprofile/mypublishlist.html");
+									wobj.reload(true);
+									old_back()
+								}*/
+
+						var self = plus.webview.currentWebview();
+						job_id = self.updataid;
+						jobitem_id = self.jobitem_id;
+						user_id = self.user_id;
+						operation = self.operation;
+
+						if(operation == 1) {
+							updatapage();
+							/*var showCityButton = document.getElementById('ShowWorkCity');
+									showCityButton.off('tap', function(event) {
+										
+									}, false);*/
+						}
+						if(operation == 2) {
+							addjobitem();
+							/*var showCityButton = document.getElementById('ShowWorkCity');
+									showCityButton.off('tap', function(event) {
+										workcity.show(function(items) {
+											showCityButton.innerHTML =  _getParam(items[0], 'text') + "-" + _getParam(items[1], 'text') + "-" + _getParam(items[2], 'text') ;
+											selectedcity = items[2].value;
+											//返回 false 可以阻止选择框的关闭
+											//return false;
+										});
+									}, false);*/
+						}
+						var w1 = plus.nativeUI.showWaiting("正在验证身份，请等待...\n", {
+							loading: {
+								icon: "/images/waiting.png"
+							}
+						});
+						jQuery.ajax({
+							contentType: "application/json",
+							type: "GET",
+							url: url_1 + "query_authentic.do?jsoncallback=?",
+							data: "user_id=" + user_id,
+							dataType: "json",
+							success: function(data) {
+								var timeset = 1;
+								var timer = setInterval(function() {
+									if(timeset == 0) {
+										clearInterval(timer);
+										w1.close();
+										if(data.flag == 1) {} else if(data.flag == 2) {
+											var btnArray = ['前往实名认证', '取消'];
+											$.confirm('您还未实名认证，不能发布工作，是否前往实名认证', '提示', btnArray, function(e) {
+												if(e.index == 0) {
+													certification();
+												} else {
+													mui.back();
+													return;
+												}
+											})
+										} else if(data.flag == 0) {
+											$.alert('身份查询失败', '错误', function() {});
+											mui.back();
+											return;
+										} else if(data.flag == 3) {
+											$.alert('身份验证审核中', '提示', function() {});
+											mui.back();
+											return;
+										} else {
+											$.alert('身份验证失败', '错误', function() {});
+											mui.back();
+											return;
+										}
+									} else {
+										--timeset;
+									}
+								}, 200);
+
+							},
+							error: function() {
+								w1.close();
+								$.alert('网络连接错误1', '错误', function() {});
+								mui.back();
+								return;
+							}
+						});
+						plus.geolocation.getCurrentPosition(geoInf, function(e) {
+							outSet("获取定位位置信息失败：" + e.message);
+						}, {
+							geocode: true
+						});
+
+						function geoInf(position) {
+							document.getElementById("ShowWorkCity").innerHTML = position.address.province + "-" + position.address.city + "-" + position.address.district;
+							localStorage.setItem("user_province", position.address.province);
+							localStorage.setItem("user_city", position.address.city);
+							localStorage.setItem("user_district", position.address.district);
+							for(i = 0; i < cityData3.length; i++) {
+								if(cityData3[i].text == position.address.province) {
+									for(j = 0; j < cityData3[i].children.length; j++) {
+										if(cityData3[i].children[j].text == position.address.city) {
+											for(k = 0; k < cityData3[i].children[j].children.length; k++) {
+												if(cityData3[i].children[j].children[k].text == position.address.district) {
+													localStorage.setItem("districtnumber", cityData3[i].children[j].children[k].value);
+													selectedcity = localStorage.getItem("districtnumber");
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+
+						//获取工种方法1
+						/*jQuery.ajax({
+							contentType: "application/json",
+							type: "GET", //url : "http://127.0.0.1:8020/GoodJob/myjson/worktype.json",
+							url: url_2 + "front_get_jobtypes.do?jsoncallback=?", //url : "http://192.168.0.115:8080/front_get_activitys.do?jsoncallback=?",
+							dataType: "json",
+							success: function(data) {
+
+								for(i = 0; i < data.list.length; i++) {
+									worktypeformjson[i] = data.list[i].name;
+								}
+								var workertype = new mui.PopPicker();
+								workertype.setData(worktypeformjson);
+								var addtypeflag = jQuery("#selectworktype");
+								jQuery("#selectworktype").click(function() {
+									workertype.show(function(items) {
+										document.getElementById("selectworktype").innerHTML ="<h5>"+ items+"</h5>";
+										checkHTML = 1;
+										for(i = 0; i < data.list.length; i++) {
+											if(worktypeformjson[i] == items) {
+												selectedtype = data.list[i].id;
+											}
+										}
+										selectjobskill();
+									});
+								});
+							},
+							error: function() {
+								mui.alert('网络连接错误2', '错误', function() {});
+							}
+						});*/
+						//获取工种方法2
+						jQuery.ajax({
+							contentType: "application/json",
+							type: "GET", //url : "http://127.0.0.1:8020/GoodJob/myjson/worktype.json",
+							url: url_2 + "front_get_jobtypeandskill.do?jsoncallback=?", //url : "http://192.168.0.115:8080/front_get_activitys.do?jsoncallback=?",
+							dataType: "json",
+							success: function(data) {
+
+								for(i = 0; i < data.jobtypelist.length; i++) {
+									worktypeformjson[i] = data.jobtypelist[i].name;
+								}
+								var workertype = new mui.PopPicker();
+								workertype.setData(worktypeformjson);
+								var addtypeflag = jQuery("#selectworktype");
+								jQuery("#selectworktype").click(function() {
+									workertype.show(function(items) {
+										document.getElementById("selectworktype").innerHTML = items;
+										checkHTML = 1;
+										for(i = 0; i < data.jobtypelist.length; i++) {
+											if(worktypeformjson[i] == items) {
+												selectedtype = data.jobtypelist[i].id;
+											}
+										}
+										document.getElementById("skill").innerHTML = "";
+										var countskill = 0;
+										for(i = 0; i < data.skilllist.length; i++) {
+
+											if(data.skilllist[i].jobtype.id == selectedtype) {
+												skillid[countskill] = data.skilllist[i].id;
+												countskill++;
+												var html = document.getElementById("skill").innerHTML;
+												document.getElementById("skill").innerHTML = html + '<button id="' + data.skilllist[i].id + '" name="1" onclick="changeskill(this)" type="button" class="mui-btn mui-btn-primary mui-btn-outlined">' + data.skilllist[i].name + '</button>'
+
+											}
+										}
+
+										/*	skilllength = data.skills.length;
+											for(i = 0; i < data.skills.length; i++) {
+												skillid[i] = data.skills[i].id;
+												var html = document.getElementById("skill").innerHTML;
+												//document.getElementById("skill").innerHTML = '<div style="width: 30%;float: left;margin-top: 10px;">	' + '<input id="' + data.skills[i].id + '" type="checkbox"  value="" onclick="slilllist(this,3)"/>' + data.skills[i].name + '</div>' + html;
+												document.getElementById("skill").innerHTML = 'button id="' + data.skills[i].id + '" name="1" onclick="changeskill(this)" type="button" class="mui-btn mui-btn-primary mui-btn-outlined">' + data.skills[i].name + '</button>'
+
+											}*/
+									});
+								});
+							},
+							error: function() {
+								mui.alert('网络连接错误2', '错误', function() {});
+							}
+						});
+					}) //--------------------------------------------------------------------------------------
+					//设计装修规格，一级联动和施工位置，三级联动，开工时间
+					$.ready(function() {
+						var _getParam = function(obj, param) {
+							return obj[param] || '';
+						};
+						//******************************************************************************
+						//施工地点自动定位
+						//document.getElementById("ShowWorkCity").innerHTML = localStorage.getItem(user_province)+"-"+localStorage.getItem(user_user_city)+"-"localStorage.getItem(user_district);
+						//************************************************************************************************************
+						//施工地点三级联动
+						var workcity = new $.PopPicker({
+							layer: 3
+						});
+						workcity.setData(cityData3);
+						var showCityButton = document.getElementById('ShowWorkCity');
+						showCityButton.addEventListener('tap', function(event) {
+							workcity.show(function(items) {
+								showCityButton.innerHTML = _getParam(items[0], 'text') + "-" + _getParam(items[1], 'text') + "-" + _getParam(items[2], 'text');
+								selectedcity = items[2].value;
+								//返回 false 可以阻止选择框的关闭
+								//return false;
+							});
+						}, false);
+						//************************************************************************************************************
+						var newtime = [];
+
+						var nowdata = new Date().toString();
+
+						var list = nowdata.split(" ");
+
+						newtime[0] = list[3];
+						newtime[1] = monthchange(list[1]);
+						newtime[2] = list[2];
+						var showdata = newtime.join("-");
+						document.getElementById("ShowWorkDay").innerHTML = showdata;
+					});
+				}
+
+			)(mui, document);
+
+			//发布监测
+			function subcheck() {
+				if(operation == 1) {
+					return 1;
+				}
+				//用来判断是否有技能标签被选中。若为空，则没有选择技能
+				var checkskill = "";
+				console.log(skillid.length);
+				for(i = 0; i < skillid.length; i++) {
+					console.log(document.getElementById(skillid[i]).name + ":" + document.getElementById(skillid[i]).name);
+					if(document.getElementById(skillid[i]).name == "2") {
+						checkskill = checkskill + skillid[i];
+					}
+				}
+				//return0是提示语，显示出那些变量填写有问题
+				var return0 = "";
+				var a = 0;
+				//详细地点是否填写
+				if(document.getElementById("ShowWorkCityMore").value == "" && operation == 0) {
+					//document.getElementById("returnerror1").innerHTML = "未填写详细地点";
+					return0 = return0 + "\n未填写详细地点";
+					if(a == 0) {
+						document.getElementById("ShowWorkCityMore").focus();
+						a = 1;
+					}
+				}
+				if(checkHTML == 0 && operation != 1) {
+					//document.getElementById("returnerror2").innerHTML = "未选择工种";
+					return0 = return0 + "\n未选择工种";
+					if(a == 0) {
+						document.getElementById("selectworktype").focus();
+						a = 1;
+					}
+				}
+				if(checkskill == "" && operation != 1) {
+					//document.getElementById("returnerror3").innerHTML = "未选择工种技能";
+					return0 = return0 + "\n未选择工种技能";
+					if(a == 0) {
+						document.getElementById("selectworktype").focus();
+						a = 1;
+					}
+				}
+				//判断字符是否为纯数字
+				if(isNaN(document.getElementById("onemoney").value)) {
+					return0 = return0 + "\n薪水金额出现非法字符";
+					if(a == 0) {
+						document.getElementById("onemoney").focus();
+						a = 1;
+					}
+				}
+				if(document.getElementById("workload").value == "") {
+					//document.getElementById("returnerror4").innerHTML = "未填写施工量";
+					return0 = return0 + "\n未填写施工量";
+					if(a == 0) {
+						document.getElementById("workload").focus();
+						a = 1;
+					}
+				}
+				if(isNaN(document.getElementById("workload").value)) {
+					return0 = return0 + "\n工作量数额出现非法字符";
+					if(a == 0) {
+						document.getElementById("workload").focus();
+						a = 1;
+					}
+				}
+				
+				var checktime=timecheck();
+				if(checktime==1){
+					return0 = return0 + "\n预计开工时间错误，小于当前时间";
+					if(a == 0) {
+						document.getElementById("ShowWorkDay").focus();
+						a = 1;
+					}
+				}
+				//return为空，则显示没有输入错误，通过验证
+				if(return0 == "") {
+					return 1;
+				}
+				mui.alert(return0, '数据错误', function() {});
+				return 0;
+			}
+			//判断开工时间是否小于当前时间，返回值timeflag=1则是出错，timeflag=0则是正常。
+			function timecheck() {
+				var timeflag=0;
+				//获取当前时间
+				var newtime_1 = [];
+
+						var nowdata_1 = new Date().toString();
+
+						var list_1 = nowdata_1.split(" ");
+
+						newtime_1[0] = list_1[3];
+						newtime_1[1] = monthchange(list_1[1]);
+						newtime_1[2] = list_1[2];
+						
+						//获取预计开工时间
+						var newtime_2=[];
+						var nowdata_2=document.getElementById("ShowWorkDay").innerHTML;
+						
+						var newtime_2 = nowdata_2.split("-");
+						
+						
+						//如果当前时间年份大于预计开工时间年份，timeflag=1，出错
+						//如果当前时间年份等于预计开工时间年份，并且当前时间月份大于
+						//预计开工时间月份，timeflag=1，出错
+						//如果年份和月份都相等，当前日期大于预计开工日期，timeflag=1，出错
+						//其他情况都为正常。
+						if(newtime_1[0]>newtime_2[0]){
+							timeflag=1;
+						}
+						if(newtime_1[0]==newtime_2[0]){
+							if(newtime_1[1]>newtime_2[1]){
+								timeflag=1;
+							}
+							if(newtime_1[1]=newtime_2[1]){
+								if(newtime_1[2]>newtime_2[2]){
+									timeflag=1;
+								}
+							}
+						}
+						
+						return timeflag;
+			}
+
+			//*****************************************************
+			//填充技能,,当前未使用该方法
+			function selectjobskill() {
+
+				var str = parseInt(selectedtype);
+				//发送工种id，获的该工种下的所有技能
+				//skillid用来记录获得的技能id，用来查询或操作
+				//成功或失败都要结束等待框
+				$.ajax({
+					contentType: "application/json",
+					type: "GET", //url : "http://127.0.0.1:8020/GoodJob/myjson/worktype.json",
+					url: url_2 + "get_skillbyjobtype.do?jsoncallback=?",
+					data: "id=" + str,
+					dataType: "json",
+					success: function(data) {
+						document.getElementById("skill").innerHTML = "";
+						//设置1秒钟等待时间，避免等待框闪屏
+
+						skilllength = data.skills.length;
+						for(i = 0; i < data.skills.length; i++) {
+							skillid[i] = data.skills[i].id;
+							var html = document.getElementById("skill").innerHTML;
+							//document.getElementById("skill").innerHTML = '<div style="width: 30%;float: left;margin-top: 10px;">	' + '<input id="' + data.skills[i].id + '" type="checkbox"  value="" onclick="slilllist(this,3)"/>' + data.skills[i].name + '</div>' + html;
+							document.getElementById("skill").innerHTML = '<button id="' + data.skills[i].id + '" name="1" onclick="changeskill(this)" type="button" class="mui-btn mui-btn-primary mui-btn-outlined">' + data.skills[i].name + '</button>'
+
+						}
+					},
+					error: function() {
+
+						mui.alert('网络连接错误', '错误', function() {});
+					}
+				});
+			}
+
+			//obj都是获得的当前标签的this
+			//填充自动提示文字
+			function settitle(obj) {
+				if(obj.id == "ShowWorkCityMore") {
+					obj.setAttribute("placeholder", "例：康乐花园小区")
+				}
+				if(obj.id == "onemoney") {
+					obj.setAttribute("placeholder", "输入薪水");
+					if(isNaN(document.getElementById("onemoney").value)||parseInt(document.getElementById("onemoney").value)<0) {
+						document.getElementById("onemoney").focus();
+						mui.alert('薪水填写非法', '错误', function() {});
+					}
+				}
+				if(obj.id == "workload") {
+					obj.setAttribute("placeholder", "输入施工面积");
+					if(document.getElementById("workload").value == "") {
+						mui.alert('未填写施工量', '错误', function() {});
+						document.getElementById("workload").focus();
+					}
+					if(isNaN(document.getElementById("workload").value)||parseInt(document.getElementById("onemoney").value)<=0) {
+						document.getElementById("workload").focus();
+						mui.alert('施工量填写非法', '错误', function() {});
+					}
+				}
+
+			}
+
+			//消去自动提示文字
+			function updatetitle(obj) {
+
+				obj.setAttribute("placeholder", "");
+
+			}
+
+			//改变技能颜色
+			function slilllist(obj) {
+				if(obj.checked) {
+					obj.parentNode.style.color = "#007aff";
+				} else {
+					obj.parentNode.style.color = "";
+				}
+			}
+
+			//薪水自动提示和选项的自动变换
+			function chengetype(obj) {
+				if(obj.value == "面议") {
+					document.getElementById("onemoney").setAttribute("placeholder", "面议");
+				}
+				if(obj.value == "元") {
+					document.getElementById("onemoney").setAttribute("placeholder", "输入薪水");
+				}
+			}
+
+			//发布操作
+			function publish() {
+				var btnArray = ['确认发布', '取消'];
+				mui.confirm('是否确认发布', '提示', btnArray, function(e) {
+					if(e.index == 0) {
+						if(!subcheck()) {
+							return;
+						}
+						//alert语句，具有一段时间后自动消失的效果
+						//mui.toast('正在发布');
+
+						//工作类别的选择
+						if(document.getElementsByName("radio")[0].checked) {
+							category = "1";
+						}
+						if(document.getElementsByName("radio")[1].checked) {
+							category = "2";
+						}
+						//记录选择的技能的id和相关的文字
+						for(i = 0; i < skillid.length; i++) {
+							console.log("id" + skillid[i]);
+							console.log(document.getElementById(skillid[i]).name);
+							if(document.getElementById(skillid[i]).name == "2") {
+								if(selectedskills == "") {
+									selectedskills = skillid[i].toString();
+								} else {
+									selectedskills = selectedskills + "_" + skillid[i].toString();
+								}
+							}
+						}
+						selectedaddress = document.getElementById("ShowWorkCityMore").value; //详细地址
+						//selectedcity                                                    //省市区区号
+						//selectedtype                                                    //工种编号
+						//document.getElementById("")                                        //技能编号
+						selectedsalary = document.getElementById("onemoney").value; //薪水
+						if(selectedsalary == "") {
+							selectedsalary = 0;
+						}
+						workload = document.getElementById("workload").value; //施工量
+
+						//workunit = document.getElementById("workloadtype").value; //施工量单位
+						//category                                                        //工作类别
+						//urgency                                                         //加急金额
+						if(document.getElementsByName("radiounit")[0].checked) {
+							workunit = "1";
+						}
+						if(document.getElementsByName("radiounit")[1].checked) {
+							workunit = "2";
+						}
+						/*判断发布形式*/
+						if(operation == 0) {
+							var str = {
+								"user_id": user_id,
+								"area_code": selectedcity,
+								"community_name": selectedaddress,
+								"jobtype_id": selectedtype,
+								"skills_id": selectedskills,
+								"decoration_type": category,
+								"area": workload,
+								"unit": workunit,
+								"salary": selectedsalary,
+								"urgent_status": "0",
+								"urgent_fee": "0",
+								"pre_start_date": document.getElementById("ShowWorkDay").innerHTML
+
+							};
+							var urltz = url_3 + "add_job.do?jsoncallback=?";
+						}
+						//修改
+						if(operation == 1) {
+							var str = {
+								"id": jobitem_id,
+								"job_id": job_id,
+								"community_name": selectedaddress,
+								"jobtype_id": selectedtype,
+								"skills_id": selectedskills,
+								"decoration_type": category,
+								"area": workload,
+								"unit": workunit,
+								"salary": selectedsalary,
+								"urgent_fee": urgent_fee,
+								"urgent_status": urgent_status,
+								"pre_start_date": document.getElementById("ShowWorkDay").innerHTML
+							};
+							var urltz = url_3 + "update_jobitem.do?jsoncallback=?";
+						}
+						//添加
+						if(operation == 2) {
+							var str = {
+								"job_id": job_id,
+								"jobtype_id": selectedtype,
+								"skills_id": selectedskills,
+								"area": workload,
+								"unit": workunit,
+								"salary": selectedsalary,
+								"urgent_fee": 0,
+								"urgent_status": 0,
+								"pre_start_date": document.getElementById("ShowWorkDay").innerHTML
+							};
+							var urltz = url_3 + "add_jobitem.do?jsoncallback=?";
+						}
+						var w2 = plus.nativeUI.showWaiting("正在发布，请等待...\n", {
+							loading: {
+								icon: "../images/waiting.png"
+							}
+						});
+
+						$.ajax({
+							contentType: "application/json",
+							type: "GET",
+							url: urltz,
+							data: str,
+							dataType: "json",
+							success: function(data) {
+
+								var timeset = 1;
+								var timer = setInterval(function() {
+									if(timeset == 0) {
+										clearInterval(timer);
+										w2.close();
+										if(data.flag == 1) {
+											mui.toast('发布成功');
+											pubsuccjump();
+										} else if(data.flag == 0) {
+											mui.toast('发布失败');
+										} else {
+											mui.toast('操作失败');
+										}
+									} else {
+										--timeset;
+									}
+								}, 200);
+
+							},
+							error: function() {
+								w2.close();
+								mui.alert('网络连接错误', '错误', function() {});
+							}
+						});
+
+					} else {
+						return;
+					}
+				})
+				//进行验证信息是否填写完整，正确
+
+			}
+
+			//接收从修改页面跳转过来的工作id，根据id把数据填充进页面
+			//填充进页面，
+			//修改发布和加急发布按钮出发的事件
+			function updatapage() {
+				var w3 = plus.nativeUI.showWaiting("正在读取数据，请等待...\n", {
+					loading: {
+						icon: "../images/waiting.png"
+					}
+				});
+				console.log("接受的id：" + jobitem_id);
+				$.ajax({
+					contentType: "application/json",
+					type: "GET", //url: azurl + "/GoodJob/myjson/xiugai.json",
+					url: url_3 + "show_jobitem_byid.do?jsoncallback=?",
+					data: "jobitem_id=" + jobitem_id,
+					dataType: "json",
+					success: function(data) {
+						if(data.flag == 1) {
+							operation = 1; //表示进行的操作是修改信息
+							//更改按钮事件
+							//把发布按钮的触发事件从普通发布转移到修改发布
+							document.getElementById("submited").remove();
+							document.getElementById("UrgentPublish").remove();
+							document.getElementById("buttonstyle").innerHTML = '<button id="submited" type="button" class="mui-btn mui-btn-primary  mui-btn-outlined" style="width: 30%;margin-left: 15%;" onclick="publish()">确认修改</button>' +
+								'<button id="UrgentPublish"  type="button" class="mui-btn mui-btn-primary  mui-btn-outlined" style="width: 30%;margin-left: 10%;" onclick="urgepublish()">加急发布</button>' //使地区选择的按钮和详细地址输入框变为不可更改内容
+							document.getElementById("ShowWorkCity").disabled = true;
+							document.getElementById("ShowWorkCityMore").disabled = true;
+							document.getElementsByName("radio")[0].disabled = true;
+							document.getElementsByName("radio")[1].disabled = true;
+							//获取并且填充数据
+
+							document.getElementById("workload").value = data.msg.area;
+							document.getElementById("ShowWorkCity").innerHTML = data.msg.job.address;
+							document.getElementById("ShowWorkCityMore").value = data.msg.job.community;
+							document.getElementById("onemoney").value = data.msg.salary;
+							document.getElementById("selectworktype").innerHTML = data.msg.jobtype.name;
+							selectedtype = data.msg.jobtype.id;
+							document.getElementById("jiajijine").innerHTML = "加急金额：" + data.msg.urgent_fee + "元";
+							urgent_fee = data.msg.urgent_fee;
+							if(urgent_fee > 0) {
+								urgent_status = 1;
+							}
+							if(data.msg.salary == 0) {
+								document.getElementById("moneytype").value = "面议";
+								document.getElementById("onemoney").setAttribute("placeholder", "面议");
+							}
+							if(data.msg.unit == 1) {
+								document.getElementsByName("radiounit")[0].checked;
+							}
+							if(data.msg.unit == 2) {
+								document.getElementsByName("radiounit")[1].checked;
+							}
+							if(data.msg.job.decoration_type == 1) {
+								document.getElementsByName("radio")[0].checked;
+							}
+							if(data.msg.job.decoration_type == 2) {
+								document.getElementsByName("radio")[1].checked;
+							}
+							var str = data.msg.jobtype.id;
+							//先清空，在输入
+							document.getElementById("skill").innerHTML = "";
+							var timeset = 1;
+							var timer = setInterval(function() {
+								if(timeset == 0) {
+									clearInterval(timer);
+									w3.close();
+								} else {
+									--timeset;
+								}
+							}, 200);
+							//获取工种id并且查询该工种下的所有技能，根据数据选择相应的技能
+							$.ajax({
+								contentType: "application/json",
+								type: "GET", //url : "http://127.0.0.1:8020/GoodJob/myjson/worktype.json",
+								url: url_3 + "get_skillbyjobtype.do?jsoncallback=?",
+								data: "id=" + str,
+								dataType: "json",
+								success: function(data1) {
+									skilllength = data1.list.length;
+									for(i = 0; i < data1.list.length; i++) {
+										skillid[i] = data1.list[i].id;
+										var html = document.getElementById("skill").innerHTML;
+										console.log(data1.list[i].id);
+										//document.getElementById("skill").innerHTML = '<div style="width: 30%;float: left;margin-top: 10px;">	' + '<input id="' + data.skills[i].id + '" type="checkbox"  value="" onclick="slilllist(this,3)"/>' + data.skills[i].name + '</div>' + html;
+
+										for(j = 0; j < data.skills.length; j++) {
+											if(data.skills[j].id == data1.list[i].id) {
+												document.getElementById("skill").innerHTML = html + '<button id="' + data1.list[i].id + '" name="2" onclick="changeskill(this)" type="button" class="mui-btn mui-btn-primary">' + data1.list[i].name + '</button>';
+												break;
+											} else {
+												document.getElementById("skill").innerHTML = html + '<button id="' + data1.list[i].id + '" name="1" onclick="changeskill(this)" type="button" class="mui-btn mui-btn-primary mui-btn-outlined">' + data1.list[i].name + '</button>';
+												break;
+											}
+										}
+									}
+
+								},
+								error: function() {
+									mui.alert('网络连接错误2', '错误', function() {});
+								}
+							});
+						} else if(data.flag == 0) {
+							mui.alert('查询失败', '未知错误', function() {});
+						} else {
+							mui.alert('操作失败', '未知错误', function() {});
+						}
+					},
+					error: function() {
+						w3.close();
+						mui.alert('网络连接错误1', '错误', function() {});
+					}
+				});
+			}
+
+			function addjobitem() {
+				$.ajax({
+					contentType: "application/json",
+					type: "GET",
+					url: url_3 + "show_job_byid.do?jsoncallback=?",
+					//url: azurl + "/GoodJob/myjson/json2.json",
+					data: "&job_id=" + job_id,
+					dataType: "json",
+					success: function(data) {
+						if(data.flag == 1) {
+							document.getElementById("ShowWorkCity").innerHTML = data.msg[0].jobitem.job.address;
+							document.getElementById("ShowWorkCityMore").value = data.msg[0].jobitem.job.community;
+							if(data.msg[0].jobitem.job.decoration_type == 1) {
+								document.getElementsByName("radio")[0].checked;
+							}
+							if(data.msg[0].jobitem.job.decoration_type == 2) {
+								document.getElementsByName("radio")[1].checked;
+							}
+						} else if(data.flag == 0) {
+							mui.alert('查询失败', '未知错误', function() {});
+						} else {
+							mui.alert('操作失败', '未知错误', function() {});
+						}
+					},
+					error: function() {
+						mui.alert('网络连接错误2', '错误', function() {});
+					}
+				});
+				document.getElementById("submited").remove();
+				document.getElementById("UrgentPublish").remove();
+				document.getElementById("buttonstyle").innerHTML = '<button id="submited" type="button" class="mui-btn mui-btn-primary  mui-btn-outlined" style="width: 30%;margin-left: 15%;" onclick="publish()">添加发布</button>' + '<button id="UrgentPublish"  type="button" class="mui-btn mui-btn-primary  mui-btn-outlined" style="width: 30%;margin-left: 10%;" onclick="urgepublish()">加急发布</button>' //使地区选择的按钮和详细地址输入框变为不可更改内容
+				document.getElementById("ShowWorkCity").disabled = true;
+
+				document.getElementById("ShowWorkCityMore").disabled = true;
+				document.getElementsByName("radio")[0].disabled = true;
+				document.getElementsByName("radio")[1].disabled = true;
+
+			}
+
+			//加急发布，传输过去相关发布信息和是否是修改的控制信号
+			function urgepublish() {
+				//检测数据是否合格console.log("及时发布进度0");
+				if(!subcheck()) {
+					return;
+				}
+				var skillses = "";
+				if(document.getElementsByName("radio")[0].checked) {
+					category = "1";
+				}
+				if(document.getElementsByName("radio")[1].checked) {
+					category = "2";
+				}
+				selectedskills = "";
+				for(i = 0; i < skillid.length; i++) {
+					if(document.getElementById(skillid[i]).name == "2") {
+						if(selectedskills == "") {
+							selectedskills = skillid[i].toString();
+						} else {
+							selectedskills = selectedskills + "_" + skillid[i].toString();
+						}
+					}
+				}
+				if(document.getElementsByName("radiounit")[0].checked) {
+					workunit = 1;
+				}
+				if(document.getElementsByName("radiounit")[1].checked) {
+					workunit = 2;
+				}
+				//向存储空间写入数据，用于页面间传值
+
+				jumptourgenpub();
+
+			}
+
+			//实现跳转。若用户未验证，实现跳转到验证页面，附带参数userID
+			function certification() {
+
+				mui.openWindow({
+					url: '../person_center/person_realname.html?t=' + Math.random(),
+					id: 'person_realname.html',
+					extras: {}
+				})
+			}
+			//发布成功，跳转到发布列表
+			function pubsuccjump() {
+
+				mui.openWindow({
+					url: '../myprofile/mypublishlist.html?t=' + Math.random(),
+					extras: {
+						user_id: user_id
+					},
+					createNew: true
+				})
+
+			}
+			//修改发布成功，跳转到发布列表
+
+			//跳转到加急发布
+			function jumptourgenpub() {
+				var skillses = "";
+				console.log(user_id +
+					document.getElementById("ShowWorkCity").innerText +
+					selectedcity +
+					category +
+					document.getElementById("ShowWorkCityMore").value +
+					document.getElementById("selectworktype") +
+					selectedtype +
+					skillses +
+					selectedskills +
+					document.getElementById("workload").value +
+					workunit +
+					document.getElementById("onemoney").value +
+					operation +
+					updataid +
+					job_id);
+				mui.openWindow({
+					url: 'urgentpublich.html?t=' + Math.random(),
+					id: 'urgentpublich.html',
+					extras: {
+						user_id: user_id,
+						address: document.getElementById("ShowWorkCity").innerHTML,
+						addressnumber: selectedcity,
+						jobtype: category,
+						community: document.getElementById("ShowWorkCityMore").value,
+						workertype: document.getElementById("selectworktype").innerText,
+						workertypenumber: selectedtype,
+						skills: skillses,
+						skillsnumber: selectedskills,
+						areavalue: document.getElementById("workload").value,
+						unit: workunit,
+						money: document.getElementById("onemoney").value,
+						operation: operation,
+						updataid: updataid,
+						job_id: job_id,
+						pre_start_date: document.getElementById("ShowWorkDay").innerHTML
+					}
+				})
+			}
+
+			function changeskill(obj) {
+				console.log("执行前" + obj + ":" + obj.name);
+				if(obj.name == "1") {
+					obj.setAttribute("class", "mui-btn mui-btn-primary")
+					obj.name = "2";
+					console.log("执行选中后" + obj + ":" + obj.name);
+				} else if(obj.name == "2") {
+					obj.setAttribute("class", "mui-btn mui-btn-primary mui-btn-outlined")
+					obj.name = "1";
+					console.log("执行不选后" + obj + ":" + obj.name);
+				}
+			}
+
+			function monthchange(str) {
+				if(str == "Jan") {
+					return "01";
+				}
+				if(str == "Feb") {
+					return "02";
+				}
+				if(str == "Mar") {
+					return "03";
+				}
+				if(str == "Apr") {
+					return "04";
+				}
+				if(str == "May") {
+					return "05";
+				}
+				if(str == "Jun") {
+					return "06";
+				}
+				if(str == "Jul") {
+					return "07";
+				}
+				if(str == "Aug") {
+					return "08";
+				}
+				if(str == "Sep") {
+					return "09";
+				}
+				if(str == "Oct") {
+					return "10";
+				}
+				if(str == "Nov") {
+					return "11";
+				}
+				if(str == "Dec") {
+					return "12";
+				}
+
+			}
+
+			//
+			////*************************************************************************************************
+		</script>
+
+	</body>
+	<!--$.ajax({
+				contentType:"application/json",
+			    type : "GET",
+			    url : "http://192.168.0.107:8080jobitem_user.do?jsoncallback=?&user_id=3&jobitem_id=4",
+			    dataType: "json",
+			    success : function(data) {
+			        alert(data);
+			    },
+			    error :function(){
+			        alert("网络连接出错！");
+			    }
+			});
+-->
+
+</html>
+<!--// url传值，成功     
+				//localStorage.setItem("getId","123456");
+				// 本地存储转存  成功          
+				//window.location.href = 'jinjifabu.html?targetId=123'-->

@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link href="../css/mui.picker.css" rel="stylesheet" />
+		<link href="../css/mui.poppicker.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../css/mui.min.css" />
+		<style>
+			.imgSize {
+				width: 30px;
+				height: 10px;
+				float: left;
+			}
+			
+			.p0Style {
+				float: left;
+				color: #000000;
+				width: 100%;
+				font-family: "微软雅黑";
+			}
+			
+			.p1Style {
+				float: left;
+				color: #EC971F;
+				font-family: "微软雅黑";
+			}
+			
+			.p2Style {
+				float: left;
+				color: #0000FF;
+				font-family: "微软雅黑";
+			}
+			
+			.p3Style {
+				float: left;
+				color: #F14E41;
+				font-family: "微软雅黑";
+			}
+			
+			.p4Style {
+				float: left;
+				color: #000000;
+				font-family: "微软雅黑";
+			}
+			
+			.p5Style {
+				float: left;
+				color: #0000FF;
+				font-family: "微软雅黑";
+			}
+			
+			.p11Style {
+				float: left;
+				color: #EC971F;
+				font-family: "微软雅黑";
+			}
+			
+			.p100Style {
+				float: left;
+				color: #000000;
+				font-family: "微软雅黑";
+			}
+			
+			a.focus {
+				background: #ff0000;
+				color: #ffffff;
+			}
+			
+			.inputStyle {
+				float: left;
+				color: #000000;
+				width: 100%;
+			}
+			
+			.mui-btn {
+				padding: 1px;
+				margin: -5px;
+			}
+			
+			#bcid {
+				background: #0F0;
+				height: 480px;
+				width: 360px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="mui-content">
+			<div class="mui-scroll-wrapper  mui-segmented-control mui-segmented-control-inverted" style="background-color:azure;">
+				<div id="choose2" class="mui-content" style="display:  ;width: 100%;">
+					<div id="count_down" style="display: none;width: 100%;">
+						<div class="time-item" style="width: 100%;">
+							<!--<span id="day_show">0天</span>-->
+							<span style="margin-left: 25%;">订单倒计时：</span>
+							<strong id="hour_show">0时</strong>
+							<strong id="minute_show">0分</strong>
+							<strong id="second_show">0秒</strong>
+						</div>
+					</div>
+					<div id="slider" class="mui-slider">
+						<div class="mui-slider-group mui-slider-loop" id="advert">
+						</div>
+						<div class="mui-slider-indicator mui-text-right" id="advert2">
+						</div>
+					</div>
+
+					<div class="mui-content-padded">
+						<div class="mui-input-row mui-search mui-pull-right" style="width: 20%;">
+							&nbsp;<button name="" type="submit" onclick="search()">搜索</button>
+						</div>
+						<div class="mui-input-row mui-search mui-pull-right" style="width: 80%;">
+							<input id="input_search" type="search" class="mui-input-clear " placeholder="找工作  找小区">
+						</div>
+					</div>
+
+					<div class="mui-card-content">
+						<button id='showCityPicker3' type='button' style="width: 90%;margin-left: 5%;">自动定位</button>
+						<div id='cityResult3'></div>
+					</div>
+
+				</div>
+				<div>
+					<div class="mui-input-row mui-search" id="choose_jobtype" style="margin-left: 5%;">
+					</div>
+
+					<input type="button" style="background-color: #EC971F;" id="bean" value="我可接单数量">
+					<!--<div id="choose" class="mui-input-row mui-search mui-pull-right" style="display: none;width: 95%;">
+						平台选择：<br />
+						<input name="checkbox" value="Item 1" type="checkbox">好货专属
+						<input name="checkbox" value="Item 1" type="checkbox">58互联网
+						<input name="checkbox" value="Item 1" type="checkbox">赶集互联网
+					</div>-->
+				</div>
+				
+			</div>
+			<!--上下拉刷新容器-->
+				<div id="pullrefresh" class="mui-slider-item mui-control-content mui-active">
+					<div class="mui-scroll">
+						<ul class=" mui-table-view " id="show">
+						</ul>
+					</div>
+				</div>
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/urlconfiguration.js"></script>
+	<script src="../js/mui.picker.min.js"></script>
+	<script src="../js/mui.poppicker.js"></script>
+	<script src="../js/city.data.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../js/city.data-3.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../js/jquery-1.6.2.min.js"></script>
+	<script>
+		var flag = 0;
+		var types_id = [];
+		var lists;
+		var data_flag=[];
+		var county_code,province_code,city_code;
+		var jobitem_user_id;
+		var name = localStorage.getItem("name");
+		var district, city, province, unit, house;
+		var user_id = localStorage.getItem("user_id");
+		var beans = localStorage.getItem("beans");
+		var users = JSON.parse(localStorage.getItem('$users') || '[]');
+          
+//      <!--区域选择-->
+		(function($, doc) {
+			$.init();
+			$.plusReady(function() {
+				get_address();
+//				pictureturn();
+				get_jobtype();
+				/**
+				 * 获取对象属性的值
+				 * 主要用于过滤三级联动中，可能出现的最低级的数据不存在的情况，实际开发中需要注意这一点；
+				 * @param {Object} obj 对象
+				 * @param {String} param 属性名
+				 */
+				var _getParam = function(obj, param) {
+					return obj[param] || '';
+				};
+				var cityPicker3 = new $.PopPicker({
+					layer: 3
+				});
+				cityPicker3.setData(cityData3);
+				var showCityPickerButton = doc.getElementById('showCityPicker3');
+				var cityResult3 = doc.getElementById('cityResult3');
+				showCityPickerButton.addEventListener('tap', function(event) {
+					cityPicker3.show(function(items) {
+						showCityPickerButton.innerText = _getParam(items[0], 'text') + " " + _getParam(items[1], 'text') + " " + _getParam(items[2], 'text');
+						county_code = (_getParam(items[2], 'value'));
+						checkIt();
+						//返回 false 可以阻止选择框的关闭
+						return county_code;
+					});
+				}, false);
+			});
+		})(mui, document);
+
+
+		//扫一扫
+		function clicked() {
+			var baseUrl = 'barcode_scan.html';
+			var url = mui.os.plus ? baseUrl : baseUrl + '?userid=' + user_id;
+			mui.openWindow({
+				url: url,
+				extras: {
+					user_id: user_id
+				}
+			})
+
+		}
+
+		//消息查看
+		function notice() {
+			var baseUrl = 'notice.html';
+			var url = mui.os.plus ? baseUrl : baseUrl + '?userid=' + user_id;
+			mui.openWindow({
+				url: url,
+				extras: {
+					user_id: user_id
+				}
+			})
+		}
+
+		//		下拉刷新
+		mui.init({
+			pullRefresh: {
+				container: '#pullrefresh',
+				down: {
+//					height: 0,
+					callback: pulldownRefresh
+				},
+				up: {
+					contentrefresh: '正在加载...',
+					callback: pullupRefresh
+				}
+			}
+		});
+
+		//      广告展示
+		function pictureturn() {
+			console.log("县区号"+county_code);
+			console.log("市号:"+city_code);
+			console.log("省号:"+province_code);
+			$.ajax({
+				contentType: "application/json",
+				type: "get",
+				url: url_2 + "front_get_advertisment.do?jsoncallback=?",
+				data: "province_code="+province_code+"&city_code="+city_code+"&county_code="+county_code,
+                dataType: "json",
+				success: function(data) {
+					if(data.list.length >0) {
+						for(i = 0; i < data.list.length + 2; i++) {
+							z = i;
+							if(i == data.list.length) {
+								z = 0;
+							}
+							if(i == (data.list.length + 1)) {
+								z = 1;
+							}
+							var img_url = pic_2 + data.list[z].img_url;
+							$("#advert").append('<div class="mui-slider-item">' +
+								'<a  onclick="adverts(' + i + ')">' +
+								'<img src="' + img_url + '"  style="height: 150px;" id="img_url_' + i + '">' +
+								'<p class="mui-slider-title" id="title_' + i + '" >' + data.list[z].title + '</p>' +
+								'<p class="mui-slider-title" id="content_' + i + '"  style="display: none;" >' + data.list[z].content + '</p>' +
+								'</a>' + '</div>');
+							if(i < data.list.length) {
+								$("#advert2").append('<div class="mui-indicator "></div>');
+							}
+
+						}
+						//		图片滚动轮播
+						var gallery = mui('.mui-slider');
+						gallery.slider({
+							interval: 1000 //自动轮播周期，若为0则不自动播放，默认为0；
+						});
+					} 
+
+				},
+				error: function(data) {
+					alert(data);
+					alert("网络连接出错！");
+				}
+			});
+		}
+
+		//工种获取
+		function get_jobtype() {
+			$.ajax({
+				contentType: "application/json",
+				type: "get",
+				url: url_2 + "front_get_jobtypes.do?jsoncallback=?",
+				dataType: "json",
+				success: function(data) {
+					if(data.list.length != null) {
+						lists = data.list.length;
+						for(i = 0; i < data.list.length; i++) {
+							z = data.list[i].id;
+							types_id[i] = z;
+							$("#choose_jobtype").append(
+								'<button id="checkbox' + i + '" type="button" class="mui-btn-primary mui-btn-outlined"  onclick="jobtype_choose(' + i + ')">' + data.list[i].name + '</button>&nbsp;'
+							);
+							console.log("get_jobtype:jobtype_id" + z);
+						}
+					} else {
+						mui.alert("工种获取失败！");
+					}
+
+				},
+				error: function(data) {
+					alert("网络连接出错！");
+				}
+			});
+		}
+
+		//查看广告
+		function adverts(id) {
+			var w = plus.nativeUI.showWaiting("处理中，请等待...\n");
+			var content = $("#content_" + id).html();
+			var img_url = $("#img_url_" + id).attr("src");
+			var title = $("#title_" + id).html();
+			var baseUrl = 'advert.html';
+			var url = mui.os.plus ? baseUrl : baseUrl + '?content=' + content + '&?img_url=' + img_url + '&?title' + title;
+			mui.openWindow({
+				url: url,
+				extras: {
+					content: content,
+					img_url: img_url,
+					title: title
+				}
+			})
+		}
+		//查看详细信息页面
+		function order_info(jobitem_id, boss_id) {
+//			var w = plus.nativeUI.showWaiting("处理中，请等待...\n");
+			console.log("order_info:发布订单id" + jobitem_id);
+			console.log("工长id" + boss_id);
+			var baseUrl = '../order/order_info.html';
+			var url = mui.os.plus ? baseUrl : baseUrl + '?jobitem_id=' + jobitem_id + '?boss_id' + boss_id;
+			mui.openWindow({
+				url: url,
+				extras: {
+					jobitem_id: jobitem_id,
+					boss_id: boss_id,
+				}
+
+			})
+		}
+
+		//输入框搜索
+		function search() {
+			var w = plus.nativeUI.showWaiting("处理中，请等待...\n");
+			var input_search = document.getElementById("input_search").value;
+			$.ajax({
+				contentType: "application/json",
+				type: "get",
+				url: url_3 + "show_jobitems.do?jsoncallback=?",
+				data: "county_code=" + county_code + "&string=" + input_search + "&user_id=" + user_id,
+				dataType: "json",
+				success: function(data) {
+					$("#show").empty();
+					if(data.msg != null) {
+						beans = localStorage.getItem("beans");
+						document.getElementById("bean").setAttribute("value", "最大接单量：" + beans + "单");
+						for(i = 0; i < data.msg.length; i++) {
+							if(data.msg[i] == null) {
+								mui.alert("没有数据了！");
+								i = 3;
+								return;
+							} else {
+								if(data.msg[i].jobitem.job.decoration_type == 1) {
+									house = "毛坯";
+								} else {
+									house = "旧房改造";
+								}
+								if(data.msg[i].jobitem.unit == 1) {
+									unit = "平米";
+								} else {
+									unit = "延米";
+								}
+								$("#show").append('<li class="mui-card">' +
+									'<table class="p0Style"><tr><td class=" mui-badge mui-badge-warning"><h4>' + data.msg[i].jobitem.jobtype.name + '</h4></td><td class=" mui-badge mui-badge-green" id="urgent_fee_' + data.msg[i].jobitem.id + '" style="display: none;"><h4>加急费:' + data.msg[i].jobitem.urgent_fee + '</h4></td><td class=" p4Style"><h3>' + data.msg[i].jobitem.job.community + '</h3></td></tr><br />' +
+									'<tr class="p4Style"><td style="color:#ECB100;">面积：' + data.msg[i].jobitem.area + unit + '</td></h6></tr>' +
+									//									'<table class="p4Style"><tr><td class="mui-badge mui-badge-warning">&nbsp;&nbsp;&nbsp;工种：' + data.msg[i].jobtype.name + '</td></tr></table>' +
+									'<tr id="show' + i + '"><td class="mui-pull-left">技能:</td></tr>' +
+									'<table class="p4Style"><tr><td>房屋类型：' + house + '</td>' +
+									'<td>&nbsp;&nbsp;&nbsp;酬劳：' + data.msg[i].jobitem.salary + '元</td></tr>' +
+									'<tr><td class="mui-pull-left">接单：' + data.msg[i].user_num + '人</td></tr></table>' +
+									'<table class="mui-pull-right"><tr><td><input type="submit" value="详情" class="mui-pull-right" onclick="order_info(' + data.msg[i].jobitem.id + ',' + data.msg[i].jobitem.job.user.id + ',' + flag + ')">&nbsp;</td>' +
+									'<td><input type="submit" value="接单" id="get_order_' + data.msg[i].jobitem.id + '" class="mui-pull-right"  onclick="get_order_onclick(' + data.msg[i].jobitem.id + ')">&nbsp;</td>' +
+									'<td><input type="submit" value="分享" class="mui-pull-right">&nbsp;</td></tr></table>' +
+									'</li>');
+								for(z = 0; z < data.msg[i].skills.length; z++) {
+									$("#show" + i).append(
+										'<td id="p' + data.msg[i].skills[z].id + 'Style" class="mui-pull-left">' + data.msg[i].skills[z].name + '&nbsp;</td>'
+									);
+									if(data.msg[i].jobitem.urgent_fee != 0) {
+										document.getElementById("urgent_fee_" + data.msg[i].jobitem.id).setAttribute("style", "display: ;");
+									}
+								}
+							}
+						}
+						w.close();
+					} else {
+						w.close();
+						mui.alert("没有数据啦！");
+					}
+				},
+				error: function(data) {
+					w.close();
+					alert(data);
+					alert("网络连接出错！");
+				}
+			});
+		}
+		//自动定位
+		// 通过定位模块获取位置信息
+
+		function get_address() {
+			plus.geolocation.getCurrentPosition(geoInf, function(e) {
+				mui.alert("获取定位位置信息失败：" + e.message);
+			}, {
+				provider: 'baidu',
+				enableHighAccuracy: true,
+				geocode: true
+			});
+		}
+
+		function Waiting() {
+			var w = plus.nativeUI.showWaiting("处理中，请等待...\n");
+			w.onclose = function() {
+				clearInterval(t);
+			}
+			var n = 3;
+			var t = setInterval(function() {
+				n--;
+				w.setTitle("处理中，请等待...\n" + n);
+				if(n <= 0) {
+					w.close();
+					clearInterval(t);
+				}
+			}, 1000);
+		}
+
+		function geoInf(position) {
+			//Waiting();
+			district = position.address.district;
+			city = position.address.city;
+			province = position.address.province;
+			var str = "";
+			str += position.address.province + "\n"; //获取地址信息
+			str += position.address.city + "\n";
+			str += position.address.district + "\n";
+			$('#showCityPicker3').html(str);
+			county_code = search_address(district, city, province); //获取区、县的id
+			province_code = search_address_province(province);//获取省的id
+			city_code = search_address_city(city,province);//获取市的id
+			localStorage.setItem("county_code", county_code);
+			localStorage.setItem("province_code", province_code);
+			localStorage.setItem("city_code", city_code);
+			localStorage.setItem("user_address", str);
+//			console.log("县区号："+county_code);
+//			console.log("市号"+city_code);
+//			console.log("省号"+province_code);
+			pictureturn();
+			checkIt();
+			//checkIt();
+		}
+
+		//接单按钮   
+		function get_order_onclick(button_id) {
+			var w = plus.nativeUI.showWaiting("处理中，请等待...\n");
+			beans = localStorage.getItem("beans");
+			var user_authenticPer = localStorage.getItem("user_authenticPer");
+			if(user_authenticPer!=1){
+			jQuery.ajax({
+				contentType:"application/json",
+			    type : "GET",
+			    url : url_1+"get_UserMes.do?jsoncallback=?",
+			    data:"user_id="+user_id,
+			    dataType: "json",
+			    success : function(data) {
+			      user_authenticPer=data.user.user_authenticCPer;
+			      localStorage.setItem("user_authenticPer",user_authenticPer);
+			    },
+			    error :function(){
+			        alert("网络连接出错！");
+			    }
+			});
+			}
+			if(user_authenticPer == 1) {
+				if(beans < 1) {
+					w.close();
+					mui.alert("豆已用完，过会儿再来吧");
+				} else {
+					if($("#get_order_" + button_id).val() == "成功接单") {
+						w.close();
+						mui.alert("您已接此单！");
+					}
+					if($("#get_order_" + button_id).val() == "接单") {
+						$.ajax({
+							contentType: "application/json",
+							type: "get",
+							url: url_3 + "add_jobitem_user.do?jsoncallback=?",
+							data: "jobitem_id=" + button_id + "&user_id=" + user_id,
+							dataType: "json",
+							success: function(data) {
+								if(data.flag == 3) {
+									w.close();
+									mui.alert("您已接此单！");
+								} else {
+									mui.alert("接单成功");
+									w.close();
+									jobitem_user_id = data.jobitem_user_id;
+									beans = beans - 1;
+									localStorage.setItem("beans", beans);
+									document.getElementById("bean").setAttribute("value", "最大接单量：" + beans + "单");
+									$("#get_order_" + button_id).val("成功接单");
+								}
+							},
+							error: function(data) {
+								w.close();
+								alert(data);
+								alert("网络连接出错！");
+							}
+						});
+					}
+				}
+			} else {
+				w.close();
+				mui.alert("请先去完成实名认证！");
+			}
+		}
+		//进入页面首次加载
+		function checkIt() {
+			var w = plus.nativeUI.showWaiting("处理中，请等待...\n");
+			console.log("用户id" + user_id);
+			console.log("地址区号：" + county_code);
+			$.ajax({
+				contentType: "application/json",
+				type: "get",
+				url: url_3 + "show_jobitems.do?jsoncallback=?",
+				data: "county_code=" + county_code + "&user_id=" + user_id,
+				dataType: "json",
+				success: function(data) {
+					$("#show").empty();
+					if(data.msg != null&&data.msg.length >0) {
+						beans = localStorage.getItem("beans");
+						document.getElementById("bean").setAttribute("value", "最大接单量：" + beans + "单");
+						for(i = 0; i < data.msg.length; i++) {
+						console.log("2018.05.21-19:54"+data.msg.length)
+							if(data.msg[i] == null) {
+								w.close();
+								mui.alert("没有数据了！");
+								return;
+							} else {
+								if(data.msg[i].jobitem.job.decoration_type == 1) {
+									house = "毛坯";
+								} else {
+									house = "旧房改造";
+								}
+								if(data.msg[i].jobitem.unit == 1) {
+									unit = "平米";
+								} else {
+									unit = "延米";
+								}if(data.msg[i].jobitem.jobtype!=null || data.msg[i].jobitem.jobtype!=undefined) {
+									jobite_jobtype_name=data.msg[i].jobitem.jobtype.name
+								} else{
+									jobite_jobtype_name="未选择"
+								}
+								$("#show").append('<li class="mui-card">' +
+									'<table class="p0Style"><tr><td class=" mui-badge mui-badge-warning"><h4>' + jobite_jobtype_name + '</h4></td><td class=" mui-badge mui-badge-green" id="urgent_fee_' + data.msg[i].jobitem.id + '" style="display: none;"><h4>加急费:' + data.msg[i].jobitem.urgent_fee + '</h4></td><td class=" p4Style"><h3>' + data.msg[i].jobitem.job.community + '</h3></td></tr><br />' +
+									'<tr class="p4Style"><td style="color:#ECB100;">面积：' + data.msg[i].jobitem.area + unit + '</td></h6></tr>' +
+									'<tr id="show' + i + '"><td class="mui-pull-left">技能:</td></tr>' +
+									'<table class="p4Style"><tr><td>房屋类型：' + house + '</td>' +
+									'<td>&nbsp;&nbsp;&nbsp;酬劳：' + data.msg[i].jobitem.salary + '元</td></tr>' +
+									'<tr><td class="mui-pull-left">接单：' + data.msg[i].user_num + '人</td></tr></table>' +
+									'<table class="mui-pull-right"><tr><td><input type="submit" value="详情" class="mui-pull-right" onclick="order_info(' + data.msg[i].jobitem.id + ',' + data.msg[i].jobitem.job.user.id + ',' + flag + ')">&nbsp;</td>' +
+									'<td><input type="submit" value="接单" id="get_order_' + data.msg[i].jobitem.id + '" class="mui-pull-right"  onclick="get_order_onclick(' + data.msg[i].jobitem.id + ')">&nbsp;</td>' +
+									'<td><input type="submit" value="分享" class="mui-pull-right">&nbsp;</td></tr></table>' +
+									'</li>');
+								for(z = 0; z < data.msg[i].skills.length; z++) {
+									$("#show" + i).append(
+										'<td id="p' + data.msg[i].skills[z].id + 'Style" class="mui-pull-left">' + data.msg[i].skills[z].name + '&nbsp;</td>'
+									);
+									if(data.msg[i].jobitem.urgent_fee != 0) {
+										document.getElementById("urgent_fee_" + data.msg[i].jobitem.id).setAttribute("style", "display: ;");
+									}
+								}
+							}
+						}w.close();
+					} else {
+						w.close();
+						mui.alert("没有数据啦！");
+					}
+				},
+				error: function(data) {
+					w.close();
+//					alert("失败");
+					alert("网络连接出错！");
+				}
+			});
+		}
+
+		//上拉刷新
+		var count = 0;
+		function pullupRefresh() {
+			mui('#pullrefresh').pullRefresh().endPullupToRefresh(); //参数为true代表没有更多数据了。
+			$.ajax({
+				contentType: "application/json",
+				type: "GET",
+				url: url_3 + "show_jobitems.do?jsoncallback=?",
+				data: "county_code=" + county_code + "&user_id=" + user_id,
+				dataType: "json",
+				success: function(data) {
+					if(data.msg != null) {
+						$("#show").empty();
+						var cells = document.body.querySelectorAll('.mui-table-view-cell');
+						for(i = 0; i < 3; i++) {
+							if(data.msg[i] == null) {
+								mui.alert("没有数据了！");
+								i = 3;
+								return;
+							} else {
+								if(data.msg[i].jobitem.job.decoration_type == 1) {
+									house = "毛坯";
+								} else {
+									house = "旧房改造";
+								}
+								if(data.msg[i].jobitem.unit == 1) {
+									unit = "平米";
+								} else {
+									unit = "延米";
+								}
+								$("#show").append('<li class="mui-card">' +
+									'<table class="p0Style"><tr><td class=" mui-badge mui-badge-warning"><h4>' + data.msg[i].jobitem.jobtype.name + '</h4></td><td class=" mui-badge mui-badge-green" id="urgent_fee_' + data.msg[i].jobitem.id + '" style="display: none;"><h4>加急费:' + data.msg[i].jobitem.urgent_fee + '</h4></td><td class=" p4Style"><h3>' + data.msg[i].jobitem.job.community + '</h3></td></tr><br />' +
+									'<tr class="p4Style"><td style="color:#ECB100;">面积：' + data.msg[i].jobitem.area + unit + '</td></h6></tr>' +
+									//									'<table class="p4Style"><tr><td class="mui-badge mui-badge-warning">&nbsp;&nbsp;&nbsp;工种：' + data.msg[i].jobtype.name + '</td></tr></table>' +
+									'<tr id="show' + i + '"><td class="mui-pull-left">技能:</td></tr>' +
+									'<table class="p4Style"><tr><td>房屋类型：' + house + '</td>' +
+									'<td>&nbsp;&nbsp;&nbsp;酬劳：' + data.msg[i].jobitem.salary + '元</td></tr>' +
+									'<tr><td class="mui-pull-left">接单：' + data.msg[i].user_num + '人</td></tr></table>' +
+									'<table class="mui-pull-right"><tr><td><input type="submit" value="详情" class="mui-pull-right" onclick="order_info(' + data.msg[i].jobitem.id + ',' + data.msg[i].jobitem.job.user.id + ',' + flag + ')">&nbsp;</td>' +
+									'<td><input type="submit" value="接单" id="get_order_' + data.msg[i].jobitem.id + '" class="mui-pull-right"  onclick="get_order_onclick(' + data.msg[i].jobitem.id + ')">&nbsp;</td>' +
+									'<td><input type="submit" value="分享" class="mui-pull-right">&nbsp;</td></tr></table>' +
+									'</li>');
+								for(z = 0; z < data.msg[i].skills.length; z++) {
+									$("#show" + i).append(
+										'<td id="p' + data.msg[i].skills[z].id + 'Style" class="mui-pull-left">' + data.msg[i].skills[z].name + '&nbsp;</td>'
+									);
+									if(data.msg[i].jobitem.urgent_fee != 0) {
+										document.getElementById("urgent_fee_" + data.msg[i].jobitem.id).setAttribute("style", "display: ;");
+									}
+								}
+							}
+						}
+					} else {
+						mui.alert("没有数据啦！");
+					}
+				},
+				error: function() {
+					alert("网络连接出错！");
+				}
+
+			});
+			this.endPullupToRefresh(true);
+		}
+
+		//下拉刷新具体业务实现
+		function pulldownRefresh() {
+			setTimeout(function() {
+				//				document.getElementById("choose2").style.display = "";
+				checkIt();
+			}, 500);
+			mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+		}
+
+		//	<!--倒计时显示-->
+
+		var sum = 1;
+		$(function() {
+			get_timer();
+		});
+
+		function get_timer() {
+			$.ajax({
+				contentType: "application/json",
+				type: "get",
+				url: url_3 + "jobitem_ensureend.do?jsoncallback=?",
+				data: "user_id=" + user_id,
+				dataType: "json",
+				success: function(data) {
+					if(data.flag == 1) {
+						//获取当前时间
+						var myDate = new Date();
+						//				 			alert(myDate);
+						Year = myDate.getYear();
+						Month = myDate.getMonth(); //获取当前月份(0-11,0代表1月)
+						Day = myDate.getDate(); //获取当前日(1-31)
+						Hour = myDate.getHours(); //获取当前小时数(0-23)
+						Minute = myDate.getMinutes(); //获取当前分钟数(0-59)
+						Second = myDate.getSeconds(); //获取当前秒数(0-59)
+						//json获取倒计时时间
+						var year = data.msg.time.year,
+							month = data.msg.time.month,
+							day = data.msg.time.day,
+							hour = data.msg.time.hour,
+							minute = data.msg.time.minute,
+							second = data.msg.time.second; //时间默认值     
+
+						//								var hour = myDate.split(':')[0];
+						var m = parseInt(minute * 60);
+						var s = parseInt(second);
+						var h = parseInt(hour * 3600);
+						var M = parseInt(Minute * 60);
+						var S = parseInt(Second);
+						var H = parseInt(Hour * 3600);
+						var time1 = parseInt(h + m + s);
+						var time2 = parseInt(H + M + S);
+						if(time1 < time2) {
+							sum = parseInt(86400 - time2 + time1);
+						} else {
+							sum = parseInt(time1 - time2);
+						}
+						timer(sum);
+					} else {
+						document.getElementById("count_down").style.display = "none";
+						return;
+					}
+
+				},
+				error: function(data) {
+					alert(data);
+					alert("网络连接出错！");
+				}
+			});
+
+		}
+
+		function timer(sum) {
+			var intDiff = parseInt(sum);
+			window.setInterval(function() {
+				if(intDiff > 0) {
+					day = Math.floor(intDiff / (60 * 60 * 24));
+					hour = Math.floor(intDiff / (60 * 60)) - (day * 24);
+					minute = Math.floor(intDiff / 60) - (day * 24 * 60) - (hour * 60);
+					second = Math.floor(intDiff) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
+				}
+				if(minute <= 9) minute = '0' + minute;
+				if(second <= 9) second = '0' + second;
+				$('#day_show').html(day + "天");
+				$('#hour_show').html('<s id="h"></s>' + hour + '时');
+				$('#minute_show').html('<s></s>' + minute + '分');
+				$('#second_show').html('<s></s>' + second + '秒');
+				intDiff--;
+				if(intDiff == 0) {
+					document.getElementById("count_down").style.display = "none";
+					mui.alert("你的订单已确认！");
+
+				}
+			}, 1000);
+		}
+
+		//根据工种和地址筛选 
+		function jobtype_choose(id) {
+			var a = [];
+			var types = "";
+			for(i = 0; i < lists; i++) {
+				a[i] = document.getElementById("checkbox" + i);
+			}
+			if(a[id].className == "mui-btn-primary mui-btn-outlined") {
+				a[id].className = "mui-btn-primary";
+			} else {
+				a[id].className = "mui-btn-primary mui-btn-outlined";
+			}
+			for(var i = 0; i < lists; i++) {
+				if(a[i].className == "mui-btn-primary") {
+					types += types_id[i] + "_";
+				}
+			}
+			console.log("显示已选工种id：" + types);
+			$.ajax({
+				contentType: "application/json",
+				type: "get",
+				url: url_3 + "show_jobitems.do?jsoncallback=?",
+				data: "jobtype_id=" + types + "&county_code=" + county_code + "&user_id=" + user_id,
+				dataType: "json",
+				success: function(data) {
+					beans = localStorage.getItem("beans");
+					document.getElementById("bean").setAttribute("value", "最大接单量：" + beans + "单");
+					//					$('#show').html("");
+					$("#show").empty();
+					if(data.msg.length <= 0) {
+						mui.alert("暂无订单信息！");
+					}
+					if(data.msg != null) {
+						for(i = 0; i < data.msg.length; i++) {
+							if(data.msg[i] == null) {
+								mui.alert("没有数据了！");
+								i = 3;
+								return;
+							} else {
+								console.log(data.msg[i].jobitem.unit);
+								if(data.msg[i].jobitem.job.decoration_type == 1) {
+									house = "毛坯";
+								} else {
+									house = "旧房改造";
+								}
+								if(data.msg[i].jobitem.unit == 1) {
+									unit = "平米";
+								} else {
+									unit = "延米";
+								}
+								$("#show").append('<li class="mui-card">' +
+									'<table class="p0Style"><tr><td class=" mui-badge mui-badge-warning"><h4>' + data.msg[i].jobitem.jobtype.name + '</h4></td><td class=" mui-badge mui-badge-green" id="urgent_fee_' + data.msg[i].jobitem.id + '" style="display: none;"><h4>加急费:' + data.msg[i].jobitem.urgent_fee + '</h4></td><td class=" p4Style"><h3>' + data.msg[i].jobitem.job.community + '</h3></td></tr><br />' +
+									'<tr class="p4Style"><td style="color:#ECB100;">面积：' + data.msg[i].jobitem.area + unit + '</td></h6></tr>' +
+									//									'<table class="p4Style"><tr><td class="mui-badge mui-badge-warning">&nbsp;&nbsp;&nbsp;工种：' + data.msg[i].jobtype.name + '</td></tr></table>' +
+									'<tr id="show' + i + '"><td class="mui-pull-left">技能:</td></tr>' +
+									'<table class="p4Style"><tr><td>房屋类型：' + house + '</td>' +
+									'<td>&nbsp;&nbsp;&nbsp;酬劳：' + data.msg[i].jobitem.salary + '元</td></tr>' +
+									'<tr><td class="mui-pull-left">接单：' + data.msg[i].user_num + '人</td></tr></table>' +
+									'<table class="mui-pull-right"><tr><td><input type="submit" value="详情" class="mui-pull-right" onclick="order_info(' + data.msg[i].jobitem.id + ',' + data.msg[i].jobitem.job.user.id + ',' + flag + ')">&nbsp;</td>' +
+									'<td><input type="submit" value="接单" id="get_order_' + data.msg[i].jobitem.id + '" class="mui-pull-right"  onclick="get_order_onclick(' + data.msg[i].jobitem.id + ')">&nbsp;</td>' +
+									'<td><input type="submit" value="分享" class="mui-pull-right">&nbsp;</td></tr></table>' +
+									'</li>');
+								for(z = 0; z < data.msg[i].skills.length; z++) {
+									$("#show" + i).append(
+										'<td id="p' + data.msg[i].skills[z].id + 'Style" class="mui-pull-left">' + data.msg[i].skills[z].name + '&nbsp;</td>'
+									);
+									if(data.msg[i].jobitem.urgent_fee != 0) {
+										document.getElementById("urgent_fee_" + data.msg[i].jobitem.id).setAttribute("style", "display: ;");
+									}
+								}
+							}
+						}
+					} else {
+						mui.alert("没有数据啦！");
+					}
+				},
+				error: function(data) {
+					alert(data);
+					alert("网络连接出错！");
+				}
+			});
+		}
+	</script>
+	
+
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<!--App自定义的css-->
+		<link rel="stylesheet" type="text/css" href="../css/app.css" />
+		<link rel="stylesheet" type="text/css" href="../css/mui.picker.min.css" />
+		<style>
+			html,
+			body,
+			.mui-content {
+				height: 0px;
+				margin: 0px;
+				background-color: #efeff4;
+			}
+			
+			h5.mui-content-padded {
+				margin-left: 3px;
+				margin-top: 20px !important;
+			}
+			
+			h5.mui-content-padded:first-child {
+				margin-top: 12px !important;
+			}
+			
+			.mui-btn {
+				font-size: 16px;
+				padding: 8px;
+				margin: 3px;
+			}
+			
+			.ui-alert {
+				text-align: center;
+				padding: 20px 10px;
+				font-size: 16px;
+			}
+			
+			* {
+				-webkit-touch-callout: none;
+				-webkit-user-select: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">工长详细资料</h1>
+			<a id="icon-help" href="help.html"><span class="mui-icon mui-icon-help mui-pull-right"></span></a>
+		</header>
+		<div class="mui-content">
+			<div class="mui-card">
+				<form class="mui-input-group" id="show" style="margin-top: 10%;">
+
+				</form>
+			</div>
+		</div>
+
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
+		<script src="../js/jquery-1.6.2.min.js"></script>
+		<script src="../js/urlconfiguration.js"></script>
+		<script>	
+			
+			//显示详细信息
+			(function($, doc) {
+			$.init();
+			$.plusReady(function() {
+				var w = plus.nativeUI.showWaiting("处理中，请等待...\n");	
+				var self = plus.webview.currentWebview();
+			            boss_id=self.boss_id;
+			    console.log(boss_id);
+				jQuery.ajax({
+					contentType: "application/json",
+					type: "GET",
+					url: url_1 + "get_UserMes.do?jsoncallback=?",
+					data: "user_id=" + boss_id,
+					dataType: "json",
+					success: function(data) {
+						var name = data.user.name;
+						var name_company = data.user.name_company;
+						var company_address = data.user.company_address;
+						var home_address = data.user.home_address;
+						var avgscore_boss = data.user.avgscore_boss;
+						if(name != null) {
+							var realname = "已认证";
+						} else {
+							name = "未实名";
+							realname = "未实名";
+						}
+						if(name_company != null) {
+							var real_company = "已认证";
+						} else {
+							name_company = "未实名";
+							real_company = "未实名";
+						}
+						if(company_address == null || company_address == "undefined") {
+							company_address = "未查到信息";
+						}
+						if(home_address == null || company_address == "undefined") {
+							home_address = "未查到信息";
+						}
+						if(avgscore_boss == null || avgscore_boss == "undefined") {
+							avgscore_boss = "未查到信息";
+						}
+						jQuery("#show").append(
+							'<div class="mui-input-row">' +
+							'<label>姓名：</label>' +
+							'<p id="username">' + name +
+							'<a id="icon-person">' + realname + '<span class="mui-icon mui-icon-person"></span></a>' +
+							'</div>' +
+							'<div class="mui-input-row">' +
+							'<label>工长评分：</label>' +
+							'<p id="ground">' + avgscore_boss +
+							'</div>' +
+							'<div class="mui-input-row">' +
+							'<label>居住地址：</label>' +
+							'<p id="address_home" >' + home_address +
+							'</div>' +
+							'<div class="mui-input-row">' +
+							'<label>认证公司：</label>' +
+							'<p id="name_company">' + name_company +
+							'<a id="icon-person">' + real_company + '<span class="mui-icon mui-icon-person"></span></a>' +
+							'</div>' +
+							'<div class="mui-input-row">' +
+							'<label>公司地址：</label>' +
+							'<p id="address_company" >' + company_address +
+							'</div>'
+						);
+						w.close();
+					},
+					error: function() {
+						w.close();
+						alert("网络连接出错！");
+					}
+				});
+
+			})
+		})(mui, document);
+		
+		</script>
+	</body>
+
+</html>

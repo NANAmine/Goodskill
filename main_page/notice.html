@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style>
+			.title {
+				margin: 20px 15px 10px;
+				color: #6d6d72;
+				font-size: 15px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">通知</h1>
+		</header>
+		<div class="mui-content">
+
+			<ul class="mui-table-view" id="notice">
+
+			</ul>
+		</div>
+
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/jquery-1.6.2.min.js"></script>
+	<script src="../js/urlconfiguration.js"></script>
+	<script>
+		(function($, doc) {
+//			var w = plus.nativeUI.showWaiting("处理中，请等待...\n");	
+			var user_id = localStorage.getItem("user_id");
+			console.log("user_id:"+user_id);
+			$.init();
+			$.plusReady(function() {
+				jQuery.ajax({
+					contentType: "application/json",
+					type: "get",
+					url: url_2 + "front_get_messages.do?jsoncallback=?",
+					data: "user_id=" + user_id,
+					dataType: "json",
+					success: function(data) {
+						if(data.list == null || data.list == "") {
+							
+							mui.alert("暂无消息");
+						} else {
+							for(i = 0; i < data.list.length; i++) {
+								if(data.list[i].checkstatus == 0) {
+									checkstatus = "background: red;";
+								}
+								if(data.list[i].checkstatus == 1) {
+									checkstatus = "background: white;";
+								}
+								jQuery("#notice").append('<li class="mui-table-view-cell mui-media" id="checkstatus_'+data.list[i].id+'" style="' + checkstatus + '">' +
+									'<a onclick="check_notice(' + data.list[i].id + ',' + data.list[i].receiver_type + ')">' +
+									'<p style="color: #000000;">' + data.list[i].message + '</p>' +
+									'</a>' + '</li>');
+							}
+						}
+//                     w.close();
+					},
+					error: function(data) {
+//						w.close();
+						alert(data);
+						alert("网络连接出错！");
+					}
+				});
+			});
+		})(mui, document);
+
+		function check_notice(notice_id, receiver_type) {
+			var w = plus.nativeUI.showWaiting("处理中，请等待...\n");	
+			var checkstatus=document.getElementById("checkstatus_"+notice_id);
+			$.ajax({
+				contentType: "application/json",
+				type: "get",
+				url: url_2 + "front_get_message.do?jsoncallback=?",
+				data: "id=" + notice_id,
+				dataType: "json",
+				success: function(data) {
+//					var userid = $("#word_1").html();
+//					var picture_path = $("#picture_1").attr("src");
+                    if(checkstatus.style.background == "red") {
+						checkstatus.setAttribute("style","background:white;")
+					}
+					if(receiver_type == 0) {
+						var baseUrl = '../order/getorder.html';
+					}
+					if(receiver_type == 1) {
+						var baseUrl = '../order/historyorder.html';
+					}
+					var url = mui.os.plus ? baseUrl : baseUrl;
+					mui.openWindow({
+						url: url,
+					})
+				}
+			})
+		}
+	</script>
+
+</html>

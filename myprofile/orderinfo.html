@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<!--App自定义的css-->
+		<!--<link rel="stylesheet" type="text/css" href="../css/app.css"/>-->
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-icon mui-icon-left-nav mui-action-back" ></a>
+			<h1 class="mui-title">工作详细资料</h1>
+			<a id="icon-help" href="help.html"><span class="mui-icon mui-icon-help mui-pull-right">帮助</span></a>
+		</header>
+		<div class="mui-content">
+			<div>
+				<p></p>
+			</div>
+			<div class="mui-card">
+				<ul class="mui-table-view">
+					<li>
+						<div class="mui-collapse-content">
+							<form class="mui-input-group">
+								<div class="mui-input-row">
+									<label>工作地址：</label>
+									<!--<p id="username" style="width: 50%;">张三-->
+									<p id="address">
+
+								</div>
+								<div class="mui-input-row">
+									<label>工作类别：</label>
+									<p id="jobtype"></p>
+								</div>
+								<div class="mui-input-row">
+									<label>所需工种：</label>
+									<div>
+										<p id="workertype"></p>
+									</div>
+								</div>
+								<div class="mui-input-row">
+									<label>所需技能：</label>
+									<div>
+										<p id="skills"></p>
+									</div>
+								</div>
+								<div class="mui-input-row">
+									<label> 工作量：</label>
+									<p id="area"></p>
+								</div>
+								<div class="mui-input-row">
+									<label>薪水：</label>
+									<p id="salary"></p>
+								</div>
+								<div class="mui-input-row">
+									<label>发布人：</label>
+									<p id="personname"></p>
+								</div>
+								<div class="mui-input-row">
+									<label>加急金额：</label>
+									<p id="urgentsalary"></p>
+								</div>
+								<div class="mui-button-row">
+									<button class="mui-btn mui-btn-primary" type="button" onclick="mui.back();">确认</button>&nbsp;&nbsp;
+									<button class="mui-btn mui-btn-primary" type="button" onclick="jumptochange()">修改</button>
+								</div>
+							</form>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<script src="../js/urlconfiguration.js"></script>
+		<script src="../js/istext.js"></script>
+		<script src="../js/jquery-1.6.2.min.js"></script>
+		<script src="../js/mui.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
+		<script src="../js/mui.picker.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script src="../js/city.data.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/city.data-3.js" type="text/javascript" charset="utf-8"></script>
+
+		<script>
+			var job_id;
+			var jobitem_id;
+			var user_id;
+			var operation;
+			(function($, doc) {
+				
+					$('#scroll').scroll({
+						indicators: true //是否显示滚动条
+					});
+					//初始化下级页面
+					$.init({
+						swipeBack: true //启用右滑关闭功能
+					});
+					$.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						var selectedskill="";
+						job_id = self.updataid;
+						jobitem_id = self.jobitem_id;console.log(jobitem_id);
+						user_id = self.user_id;
+						operation = self.operation;
+				var w3 = plus.nativeUI.showWaiting("正在读取数据，请等待...\n", {
+					loading: {
+						icon: "../images/waiting.png"
+					}
+				});
+				jQuery.ajax({
+					contentType: "application/json",
+					type: "GET",
+					//url: azurl + "/GoodJob/myjson/xiugai.json",
+					url: url_3 + "show_jobitem_byid.do?jsoncallback=?",
+					data: "jobitem_id=" + jobitem_id,
+					dataType: "json",
+					success: function(data) {					
+						
+						document.getElementById("area").innerHTML = data.msg.area;
+						document.getElementById("address").innerHTML = data.msg.job.address + "-" + data.msg.job.community;
+						document.getElementById("salary").innerHTML = data.msg.salary;
+						document.getElementById("workertype").innerHTML = data.msg.jobtype.name;
+						document.getElementById("urgentsalary").innerHTML = data.msg.urgent_fee;
+						document.getElementById("personname").innerHTML = data.msg.job.user.name;
+
+						if(data.msg.salary == 0) {
+							document.getElementById("salary").innerHTML = "面议";
+						}
+						
+						if(data.msg.unit == 1) {
+							document.getElementById("area").innerHTML = document.getElementById("area").innerHTML + " 平米";
+						}
+						if(data.msg.unit == 2) {
+							document.getElementById("area").innerHTML = document.getElementById("area").innerHTML + " 延米";
+						}
+						
+						if(data.msg.job.decoration_type == 1) {
+							document.getElementById("jobtype").innerHTML = "毛坯装修";
+						}
+						if(data.msg.job.decoration_type == 2) {
+							document.getElementById("jobtype").innerHTML = "新房改造";
+						}
+
+						for(i = 0; i < data.skills.length; i++) {
+							if(selectedskill == "") {
+								selectedskill = data.skills[i].name;
+							} else {
+								selectedskill = selectedskill + "  " + data.skills[i].name;
+							}
+						}
+						document.getElementById("skills").innerHTML = selectedskill;
+console.log("认证状态"+data.msg.job.user.user_authenticPer)
+						if(data.msg.job.user.user_authenticPer == "0") {
+							
+							document.getElementById("personname").innerHTML = document.getElementById("personname").innerHTML +
+								'<a id="icon-person">&nbsp;&nbsp;未实名认证</a>'
+						}
+						if(data.msg.job.user.user_authenticPer == "1") {
+							
+							document.getElementById("personname").innerHTML = document.getElementById("personname").innerHTML +
+								'<a id="icon-person">&nbsp;&nbsp;已实名认证</a>'
+						}
+						if(data.msg.job.user.user_authenticPer == "2") {
+							
+							document.getElementById("personname").innerHTML = document.getElementById("personname").innerHTML +
+								'<a id="icon-person">&nbsp;&nbsp;认证审核中</a>'
+						}
+						if(data.msg.job.user.is_vip == "1") {
+							document.getElementById("personname").innerHTML = document.getElementById("personname").innerHTML +
+								'<a id="icon-person">&nbsp;&nbsp;vip用户</a>'
+						}
+						
+						var timeset = 1;
+						var timer = setInterval(function() {
+							if(timeset == 0) {
+								clearInterval(timer);
+								w3.close();
+							} else {
+								--timeset;
+							}
+						}, 1000);
+					},
+					error: function() {
+						w3.close();
+						mui.alert('网络连接错误1', '错误', function() {});
+					}
+				});
+					})
+						
+					})(mui, document);
+					
+					function jumptochange () {
+						mui.openWindow({
+					url: '../publish/publish.html?t=' + Math.random(),
+					id: 'publish.html',
+					extras: {
+						user_id: user_id,
+						operation: 1,
+						updataid: job_id,
+						jobitem_id: jobitem_id
+					},createNew:true
+				})
+					}
+				
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<!--App自定义的css-->
+		<!--<link rel="stylesheet" type="text/css" href="../css/app.css" />-->
+		<link href="../css/mui.picker.css" rel="stylesheet" />
+		<link href="../css/mui.poppicker.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="../css/mui.picker.min.css" />
+		<style>
+			.mui-btn {
+				font-size: 17px;
+				padding: 8px;
+				margin: 3px;
+			}
+			
+			span.mui-content-padded {
+				margin-left: 3px;
+				margin-top: 20px !important;
+			}
+			
+			span.mui-content-padded:first-child {
+				margin-top: 12px !important;
+			}
+			
+			.ui-alert {
+				text-align: center;
+				padding: 20px 10px;
+				font-size: 16px;
+			}
+			
+			.worktype {
+				width: 50%;
+				float: left;
+			}
+			
+			.bkys {
+				/*border-style: ridge;*/
+				/*border-radius: 10px 10px 10px 10px;*/
+			}
+			
+			h5{
+				 font-weight: normal;
+				 margin-top: 10px;
+				line-height: 1.5em;
+			}
+			
+			.mar {
+				/*margin-top: 10px;*/
+				margin-left: 10%;
+				text-align: left;
+			}
+			
+			.yuanjiao {
+				border-radius:  0px;
+				float: left;
+				width: 80%;
+				background: white !important;
+				height: 70px;
+			}
+			
+			li {
+				list-style: none;
+			}
+			span{
+				 font-weight: normal;
+				 margin-top: 10px;
+				line-height: 1.5em;
+				display:block;
+			}
+		</style>
+	</head>
+ 
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<!--<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>-->
+			<h3 class="mui-title">我的发布</h3>
+			<a id="icon-plus" style="float: right;margin-top: 10px;" href="javascript:void(0)" onclick="newpublish()">发布</a>
+		</header>
+		<div id="" style="margin-top: 70px;">
+			<span style="width:;">
+				
+		</div>
+		<div id="selecity" style="float: left;width: 100%;" class="">
+			
+			<button style="width: 80%;float: left;margin-left: 10%;" id='ShowWorkCity' class="mui-btn mui-btn-block" type='button' style="margin-top: 20px;" onblur="onecityquery()">选择地址</button>
+
+		</div>
+		<!--<h5 class="mui-content-padded" style="margin-top: ;float: right;">未完工<a><span class="mui-icon mui-icon-refreshempty" style="color:green ;"></span></a></button></h5>
+		<h5 class="mui-content-padded" style="margin-top: ;float: right;">已完工<a><span class="mui-icon mui-icon-refreshempty"></span></a></h5>
+		-->
+		
+		<div id="show" style="background:white;" class="">
+		</div>
+		<!--<div id="address" class="bkys mar yuanjiao" style="" onclick="newpublish()">
+			<span style="text-align: center;">发布用工信息+</span>
+		</div>-->
+		<script src="../js/urlconfiguration.js"></script>
+		<script src="../js/istext.js"></script>
+		<script src="../js/jquery-1.6.2.min.js"></script>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
+		<script src="../js/mui.picker.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script src="../js/city.data.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/city.data-3.js" type="text/javascript" charset="utf-8"></script>
+		<!--<script src="../js/myadd.js"></script>-->
+		<script>
+			var addressnum = 1;
+			var selectedcity = 0;
+			var user_id;
+			var addressname=[];
+			user_id=localStorage.getItem("user_id");
+					var datastr = {
+				"user_id": user_id
+			};
+			
+			//隐藏筛选
+		</script>
+		<script>
+			(function($, doc) {
+
+				$('#scroll').scroll({
+					indicators: true //是否显示滚动条
+				});
+
+				mui.init({
+			
+		});		
+				//--------------------------------------------------------------------------------------
+
+				//设计装修规格，一级联动和施工位置，三级联动
+				$.plusReady(function() {
+
+					var old_back = mui.back;
+					mui.back = function() {
+						window.location.href = '../main_page/nav.html';
+					}
+					
+					/*	var self = plus.webview.currentWebview();
+				user_id = self.user_id;
+*/
+					console.log(user_id);
+					
+					jQuery.ajax({
+						contentType: "application/json",
+						type: "GET",
+
+						url: url_3 + "show_jobs.do?jsoncallback=?",
+						data: datastr,
+						dataType: "json",
+						success: function(data) {
+						
+
+							if(data.flag == 1) {
+								//if(1) {
+								
+								document.getElementById("show").innerHTML = "";
+								for(i = 0; i < data.msg.length; i++) {
+
+									if(data.msg[i].job_status == 1) {
+										var num=data.msg[i].id;
+										addressname[num]=data.msg[i].address+"-"+data.msg[i].community;
+										document.getElementById("show").innerHTML = document.getElementById("show").innerHTML + 
+									    '<li class="mui-table-view-cell mui-media bkys mar yuanjiao" style="background:#EFEFF4;">'+
+									'<a href="javascript:;">'+
+										'<div class="mui-media-body" onclick="jumphtml(' + data.msg[i].id + ')">'+data.msg[i].community +
+											'<span class="mui-ellipsis">'+ data.msg[i].address +'<span  style="color:#037BFF;margin-top:0;float:right;">已完工</span></span>'+
+										'</div>'+
+									'</a>'+
+								'</li>	'
+									}
+									if(data.msg[i].job_status == 0) {
+										var num=data.msg[i].id;
+										
+										addressname[num]=data.msg[i].address+"-"+data.msg[i].community;
+										document.getElementById("show").innerHTML = document.getElementById("show").innerHTML +
+										'<li class="mui-table-view-cell mui-media bkys mar yuanjiao" style="background:#ecfba3;">'+
+									'<a href="javascript:;">'+
+										'<div id="'+data.msg[i].id+'" name="'+addressname+'" class="mui-media-body" onclick="jumphtml(' + data.msg[i].id + ')">'+data.msg[i].community +
+											'<span class="mui-ellipsis">'+ data.msg[i].address +'<span  style="color:green ;margin-top:0;float:right;">未完工</span></span>'+
+										'</div>'+
+									'</a>'+
+								'</li>	'
+									}
+									
+								}
+							} else if(data.flag == 0) {
+								mui.alert('查询失败', '未知错误', function() {});
+							} else {
+								mui.alert('操作失败', '未知错误', function() {});
+							}
+						},
+						error: function() {
+						
+							mui.alert('网络连接错误', '错误', function() {});
+						}
+					});
+
+					plus.geolocation.getCurrentPosition(geoInf, function(e) {
+						outSet("获取定位位置信息失败：" + e.message);
+					}, {
+						geocode: true
+					});
+
+					function geoInf(position) {
+						document.getElementById("ShowWorkCity").innerHTML = position.address.province + "-" + position.address.city + "-" + position.address.district;
+						localStorage.setItem("user_province", position.address.province);
+						localStorage.setItem("user_city", position.address.city);
+						localStorage.setItem("user_district", position.address.district);
+						for(i = 0; i < cityData3.length; i++) {
+							if(cityData3.text == position.address.province) {
+								for(j = 0; j < cityData3[i].children.length; j++) {
+									if(cityData3[i].children[j].text == position.address.city) {
+										for(k = 0; k < cityData3[i].children[j].children.length; k++) {
+											if(cityData3[i].children[j].children[k].text == position.address.district) {
+												localStorage.setItem("districtnumber", cityData3[i].children[j].children[k].value)
+												selectedcity = localStorage.getItem("districtnumber");
+											}
+										}
+									}
+								}
+
+							}
+						}
+					}
+
+				})
+
+				$.ready(function() {
+					var _getParam = function(obj, param) {
+						return obj[param] || '';
+					};
+					//施工地点三级联动
+					var workcity = new $.PopPicker({
+						layer: 3
+					});
+					workcity.setData(cityData3);
+					var showCityButton = doc.getElementById('ShowWorkCity');
+					showCityButton.addEventListener('tap', function(event) {
+						workcity.show(function(items) {
+							showCityButton.innerText = _getParam(items[0], 'text') + "-" + _getParam(items[1], 'text') + "-" + _getParam(items[2], 'text');
+
+							selectedcity = _getParam(items[2], 'value');
+							onecityquery();
+							//返回 false 可以阻止选择框的关闭
+							//return false;
+						});
+					}, false);
+				});
+			})(mui, document);
+			//当位置选择器发生变化，触发函数，根据选择的位置来获得相应的工作。
+			function onecityquery() {
+				if(selectedcity != 0) {
+					datastr = {
+						"user_id": user_id,
+						"county_code": selectedcity
+					};
+					start();
+				}
+			}
+
+			function start() {
+				var w = plus.nativeUI.showWaiting("正在查询，请等待...\n", {
+					loading: {
+						icon: "/images/waiting.png"
+					}
+				});
+				$.ajax({
+					contentType: "application/json",
+					type: "GET",
+
+					url: url_3 + "show_jobs.do?jsoncallback=?",
+					data: datastr,
+					dataType: "json",
+					success: function(data) {
+						var timeset = 1;
+						var timer = setInterval(function() {
+							if(timeset == 0) {
+								clearInterval(timer);
+								w.close();
+							} else {
+								--timeset;
+							}
+						}, 200);
+						if(data.flag == 1) {
+							//if(1) {
+							mui.toast('查询成功');
+
+							document.getElementById("show").innerHTML = "";
+							for(i = 0; i < data.msg.length; i++) {
+
+								if(data.msg[i].job_status == 1) {
+										var num=data.msg[i].id;
+										addressname[num]=data.msg[i].address+"-"+data.msg[i].community;
+										document.getElementById("show").innerHTML = document.getElementById("show").innerHTML + 
+									    '<li class="mui-table-view-cell mui-media bkys mar yuanjiao" style="background:#EFEFF4;">'+
+									'<a href="javascript:;">'+
+										'<div class="mui-media-body" onclick="jumphtml(' + data.msg[i].id + ')">'+data.msg[i].community +
+											'<span class="mui-ellipsis">'+ data.msg[i].address +'<span  style="color:#037BFF;margin-top:0;float:right;">已完工</span></span>'+
+										'</div>'+
+									'</a>'+
+								'</li>	'
+									}
+									if(data.msg[i].job_status == 0) {
+										var num=data.msg[i].id;
+										
+										addressname[num]=data.msg[i].address+"-"+data.msg[i].community;
+										document.getElementById("show").innerHTML = document.getElementById("show").innerHTML +
+										'<li class="mui-table-view-cell mui-media bkys mar yuanjiao" style="background:#ecfba3;">'+
+									'<a href="javascript:;">'+
+										'<div id="'+data.msg[i].id+'" name="'+addressname+'" class="mui-media-body" onclick="jumphtml(' + data.msg[i].id + ')">'+data.msg[i].community +
+											'<span class="mui-ellipsis">'+ data.msg[i].address +'<span  style="color:green ;margin-top:0;float:right;">未完工</span></span>'+
+										'</div>'+
+									'</a>'+
+								'</li>	'
+									}
+							}
+						} else if(data.flag == 0) {
+							mui.alert('查询失败', '未知错误', function() {});
+						} else {
+							mui.alert('操作失败', '未知错误', function() {});
+						}
+					},
+					error: function() {
+						w.close();
+						mui.alert('网络连接错误', '错误', function() {});
+					}
+				});
+			}
+			//跳转到相应的工作详情页面
+			function jumphtml(num) {
+				
+				mui.openWindow({
+					url: 'mypublish.html?t=' + Math.random(),
+					id: 'mypublish.html',
+					extras: {
+						user_id: user_id,
+						job_id: num,
+						publish_address: addressname[num]
+
+					},
+					waiting: {
+						autoShow: true, //自动显示等待框，默认为true
+						title: '正在加载...' //等待对话框上显示的提示内容    
+					},
+					createNew: true
+
+				})
+
+			}
+			//跳转到发布页面
+			function newpublish() {
+				
+
+				mui.openWindow({
+					url: '../publish/publish.html?t=' + Math.random(),
+					id: 'publish.html',
+					extras: {
+						operation: 0,
+						updataid: 0,
+						user_id: user_id,
+						jobitem_id: 0
+					},
+					createNew: true
+				})
+			}
+		</script>
+	</body>
+
+</html>

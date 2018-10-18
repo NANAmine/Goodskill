@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html class="ui-page-login">
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="../css/mui.min.css">
+	</head>
+	<style>
+		#pic {
+			width: 100px;
+			height: 100px;
+			margin: 20px auto;
+			cursor: pointer;
+		}
+		
+		#pic2 {
+			width: 100px;
+			height: 100px;
+			margin: 20px auto;
+			cursor: pointer;
+		}
+	</style>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">公司实名认证</h1>
+		</header>
+		<div class="mui-content">
+			<div>
+				<p></p>
+			</div>
+			<div class="mui-card">
+				<ul class="mui-table-view">
+					<div class="mui-collapse-content">
+						<p style="color: red;">注意：认证信息一旦认证成功无法修改，请务必真实填写</p>
+						<form class="mui-input-group">
+							<div>
+								<input type="button" style="background-color: #288BC4;" id="bean" value="认证状态：">
+								<input id="user_authenticCom" type="button" value="">
+							</div>
+							<div class="mui-input-row">
+								<label>公司名称：</label>
+								<input id="name_company" type="text" placeholder="请输入公司名称" maxlength="20">
+							</div>
+							<div class="mui-input-row">
+								<label>营业执照：</label>
+								<input id="business_license_num" type="text" class="mui-input-clear" placeholder="请输入营业执照号码" maxlength="15">
+							</div>
+							<div class="mui-input-row">
+								<label>公司地址：</label>
+								<input id="address_company" type="text" class="mui-input-clear" placeholder="请输入公司地址：" maxlength="20">
+							</div>
+							<div class="mui-input-row">
+								<label style="width: 60%;">上传营业执照照片：</label>
+							</div>
+							<div style="margin-left: 35%;">
+								<label><p style="margin-left: 10%;margin-bottom: -5%;">正面照片</p></label>
+								<form id="uploadForm" enctype="multipart/form-data">
+									<img id="pic" src="../images/company.jpg">
+									<input id="upload1" name="file" accept="image/*" type="file" style="display: none" />
+									<!--<img id="pic2" src="../images/qiye.jpg">
+									<input id="upload2" name="file2" accept="image/*" type="file" style="display: none" />-->
+							</div>
+							<div class="mui-button-row">
+								<button id="upto" class="mui-btn mui-btn-primary" type="button" onclick="upload()" style="display: none;">保存提交</button>&nbsp;&nbsp;
+							</div>
+							</form>
+					</div>
+				</ul>
+			</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/urlconfiguration.js"></script>
+		<script src="http://lib.sinaapp.com/js/jquery/1.12.4/jquery-1.12.4.min.js"></script>
+		<script>
+			var flag;
+			var id;
+			var user_id = localStorage.getItem("user_id");
+			var address_company, name_company, business_license_num, src_1, src_2, user_authenticCom, user_authenticCPer;
+			var files1 = [];
+			var files2 = [];
+			
+			$("#business_license_num").blur(function() {
+				var business_license_num = $("#business_license_num").val();
+				$("#business_license_num").css("background-color", "white");
+				if(business_license_num.length != 15) {
+					mui.alert("营业执照号码格式错误！");
+				} else {
+					flag = 1;
+				}
+			});
+			//自执行函数
+			(function($) {
+				$.init();
+				$.plusReady(function() {
+					var user_id = localStorage.getItem("user_id");
+					console.log(user_id + "222");
+					jQuery.ajax({
+						contentType: "application/json",
+						type: "GET",
+						url: url_1 + "get_UserMes.do?jsoncallback=?",
+						data: "user_id=" + user_id,
+						dataType: "json",
+						success: function(data) {
+							user_authenticCom = data.user.user_authenticCom;
+							user_authenticPer = data.user.user_authenticPer;
+							if(user_authenticPer == 2 || user_authenticPer == 0) {
+								mui.alert("先完成个人实名认证");
+								document.getElementById("upto").setAttribute("style", "display: none;");
+								return;
+							}
+							localStorage.setItem("business_license_num", data.user.business_license_num);
+							localStorage.setItem("address_company", data.user.address_company);
+							localStorage.setItem("name_company", data.user.name_company);
+							localStorage.setItem("user_authenticCom", data.user.user_authenticCom);
+							localStorage.setItem("src_1", data.user.business_license_front_url);
+							localStorage.setItem("src_2", data.user.business_license_back_url);
+							if(user_authenticCom == 1) {
+								mui.alert("您已认证");
+								document.getElementById("user_authenticCom").setAttribute("value", "已认证");
+							} else if(user_authenticCom == 0) {
+								mui.alert("您还未认证");
+								document.getElementById("user_authenticCom").setAttribute("value", "未认证");
+								document.getElementById("upto").setAttribute("style", "display: ;");
+							} else if(user_authenticCom == 2) {
+								mui.alert("审核中，请耐心等待");
+								document.getElementById("user_authenticCom").setAttribute("value", "审核中");
+							}
+						},
+						error: function() {
+							mui.alert("网络连接出错！");
+						}
+					});
+					address_company = localStorage.getItem("address_company");
+					business_license_num = localStorage.getItem("business_license_num");
+					name_company = localStorage.getItem("name_company");
+					user_authenticCom = localStorage.getItem("user_authenticCom");
+					if(address_company == "undefined") {
+						address_company = "请输入公司地址";
+					}
+					if(name_company == "undefined") {
+						name_company = "请输入名字";
+					}
+					if(business_license_num == "undefined") {
+						business_license_num = "请输入执照号";
+					}
+					document.getElementById("address_company").setAttribute("placeholder", address_company);
+					document.getElementById("name_company").setAttribute("placeholder", name_company);
+					document.getElementById("business_license_num").setAttribute("placeholder", business_license_num);
+					src_1 = localStorage.getItem("src_1");
+					if(src_1 != "undefined") {
+						src_1 = pic_1 + src_1;
+						jQuery("#pic").attr("src", src_1);
+					}
+//					src_2 = localStorage.getItem("src_2");
+//					if(src_2 != "undefined") {
+//						src_2 = pic_1 + src_2;
+//						jQuery("#pic2").attr("src", src_2);
+//					}
+				})
+			}(mui))
+			// 上传文件
+			function upload() {
+				var server = url_1 + "get_commitCompany.do?";
+				name_company = document.getElementById("name_company").value;
+				business_license_num = document.getElementById("business_license_num").value;
+				address_company = document.getElementById("address_company").value;
+				if(flag != 1) {
+					mui.alert("营业执照号码错误！");
+					return;
+				}
+				if(user_authenticCom == 1) {
+					alert("您已认证");
+					document.getElementById("user_authenticCom").setAttribute("value", "已认证");
+				} else if(user_authenticCom == 2) {
+					alert("审核中，请耐心等待");
+					document.getElementById("user_authenticCom").setAttribute("value", "审核中");
+				} else {
+					if(files1.length <= 0 ) {
+						plus.nativeUI.alert("请添加照片！");
+						return;
+					}
+					var wt = plus.nativeUI.showWaiting();
+					var task = plus.uploader.createUpload(server, {
+							method: "POST"
+						},
+						function(t, status) { //上传完成
+							console.log(t.responseText);
+							if(t.responseText == 'null({"flag":"3"})') {
+								mui.alert("认证失败");
+								wt.close();
+							} else
+							if(t.responseText == 'null({"flag":"5"})') {
+								mui.alert("审核中");
+								wt.close();
+							} else
+							if(t.responseText == 'null({"flag":"4"})') {
+								mui.alert("个人实名未认证");
+								wt.close();
+							} else
+							if(t.responseText == 'null({"flag":"1"})') {
+								mui.alert("已实名认证");
+								wt.close();
+							} else
+							if(t.responseText == 'null({"flag":"2"})') {
+								mui.alert("认证成功");
+								wt.close();
+							} else {
+								mui.alert("认证失败,照片太大了");
+								wt.close();
+							}
+						}
+					);
+					task.addData("name_company", name_company);
+					task.addData("business_license_num", business_license_num);
+					task.addData("user_id", user_id);
+					task.addData("address_company", address_company);
+					var f1 = files1[files1.length - 1];
+					task.addFile(f1.path, {
+						key: "image_01"
+					});
+//					var f2 = files2[files2.length - 1];
+//					task.addFile(f2.path, {
+//						key: "image_02"
+//					});
+					task.start();
+				}
+			}
+
+			function photo() {
+				if(mui.os.plus) {
+					var a = [{
+						title: "拍照"
+					}, {
+						title: "从手机相册选择"
+					}];
+					plus.nativeUI.actionSheet({
+						title: "照片上传",
+						cancel: "取消",
+						buttons: a
+					}, function(b) { /*actionSheet 按钮点击事件*/
+						switch(b.index) {
+							case 0:
+								break;
+							case 1:
+								appendByCamera(); /*拍照*/
+								break;
+							case 2:
+								appendByGallery(); /*打开相册*/
+								break;
+							default:
+								break;
+						}
+					})
+				}
+			}
+			// 拍照添加文件
+			function appendByCamera() {
+				plus.camera.getCamera().captureImage(function(p) {
+					//					appendFile(p);
+					plus.io.resolveLocalFileSystemURL(p, function(entry) {
+						var s = entry.toLocalURL();
+						appendFile(s);
+						console.log("拍照1：" + s);
+						if(id == 1) {
+							console.log(s);
+							document.getElementById("pic").src = s;
+						}
+//						if(id == 2) {
+//							document.getElementById("pic2").src = s;
+//						}
+					})
+				});
+			}
+			// 从相册添加文件
+			function appendByGallery() {
+				plus.gallery.pick(function(p) {
+					appendFile(p);
+				});
+			}
+			// 向files[]中添加照片
+			var index = 1;
+
+			function appendFile(p) {
+				if(id == 1) {
+					files1.push({
+						name: "uploadkey" + index,
+						path: p
+					});
+					$("#pic").attr("src", p);
+				}
+//				if(id == 2) {
+//					files2.push({
+//						name: "uploadkey" + index,
+//						path: p
+//					});
+//					$("#pic2").attr("src", p);
+//				}
+				index++;
+			}
+			$(function() {
+				$("#pic").click(function() {
+					id = 1;
+					photo();
+				});
+//				$("#pic2").click(function() {
+//					id = 2;
+//					photo();
+//				});
+			});
+		</script>
+	</body>
+
+</html>

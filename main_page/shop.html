@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<script src="../js/urlconfiguration.js"></script>
+		<style>
+			.title {
+				margin: 20px 15px 10px;
+				color: #6d6d72;
+				font-size: 15px;
+			}
+		</style>
+	</head>
+
+	<body style="background-color: white;">
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">店铺详情</h1>
+		</header>
+		<div class="mui-content" style="background-color: white;">
+			<div class="mui-slider-group mui-slider-loop" id="advert0">
+			</div>
+		</div>
+		<div id="slider" class="mui-slider">
+				<div class="mui-slider-group mui-slider-loop" id="advert1">
+				</div>
+				<div class="mui-slider-indicator mui-text-right" id="advert2">
+				</div>
+		</div>
+		<div class="mui-content" style="background-color: white;">
+			<div class="mui-slider-group mui-slider-loop" id="advert3">
+			</div>
+		</div>
+         <button class="mui-btn mui-btn-blue" style="margin-top: 70%;margin-left: 40%;" onclick="contact()" >买材料 </button>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/jquery-1.6.2.min.js"></script>
+	<script src="../js/urlconfiguration.js"></script>
+	<script>
+		var county_code,province_code,city_code;
+		(function($, doc) {
+			$.init();
+			$.plusReady(function() {
+				pictureturn();
+			});
+		})(mui, document);
+		
+		//      广告展示
+		function pictureturn() {
+//			county_code = localStorage.getItem("county_code");
+//			province_code = localStorage.getItem("province_code");
+//			city_code = localStorage.getItem("city_code");
+			jQuery.ajax({
+				contentType: "application/json",
+				type: "get",
+				url: "shop.json",
+//				url: url_2 + "frontget_store.do?jsoncallback=?",
+//				data: "province_code="+province_code+"&city_code="+city_code+"&county_code="+county_code,
+                dataType: "json",
+				success: function(data) {
+					if(data.msg.length >0) {
+						jQuery("#advert0").append('<div class="mui-slider-item">' +
+							' <h3 style="text-align: center;margin-top: 4%;color: #000000;">' + data.msg[0].name + '</h3>' +
+							'</div>');
+						for(i = 0; i < data.msg[0].picture.length + 2; i++) {
+							z = i;
+							if(i == data.msg[0].picture.length) {
+								z = 0;
+							}
+							if(i == (data.msg[0].picture.length + 1)) {
+								z = 1;
+							}
+//							var img_url = url_2 + data.msg[0].picture[z].src;
+							var img_url = data.msg[0].picture[z].src;
+							jQuery("#advert1").append('<div class="mui-slider-item">' +
+								'<a  onclick="adverts(' + i + ')">' +
+								'<img src="' + img_url + '"  style="height: 150px;" id="img_url_' + i + '">' +
+								'</a>' + '</div>');
+							if(i < data.msg[0].picture.length) {
+								jQuery("#advert2").append('<div class="mui-indicator "></div>');
+							}
+
+						}
+						jQuery("#advert3").append(
+							'<div style="color: #000000; margin-left: 5%;width: 90%; margin-top: 5%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + data.msg[0].introduce + '</div>' 
+						); 
+						
+						//		图片滚动轮播
+						var gallery = mui('.mui-slider');
+						gallery.slider({
+							interval: 1000 //自动轮播周期，若为0则不自动播放，默认为0；
+						});
+					} else {
+						mui.alert("暂无信息！");
+					}
+
+				},
+				error: function(data) {
+					alert(data);
+					alert("网络连接出错！");
+				}
+			});
+		}
+
+
+    function contact(){
+    	mui.alert("请耐心等待，我们已通知商家，商家会尽快联系您！");
+    }
+
+	</script>
+
+</html>

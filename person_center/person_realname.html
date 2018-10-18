@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html class="ui-page-login">
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<!--App自定义的css-->
+		<link rel="stylesheet" type="text/css" href="../css/mui.picker.min.css" />
+		<style>
+			.display {
+				width: 100%;
+				height: 100%;
+				display: none;
+				text-align: center;
+				padding-top: 30%;
+				position: fixed;
+				top: 0;
+				background: rgba(0, 0, 0, 0.8);
+				z-index: 9999;
+				overflow: hidden;
+			}
+			
+			html,
+			body,
+			.mui-content {
+				height: 0px;
+				margin: 0px;
+				background-color: #efeff4;
+			}
+			
+			.mui-btn {
+				font-size: 16px;
+				padding: 8px;
+				margin-right: 12px;
+			}
+			
+			#pic {
+				width: 100px;
+				height: 100px;
+				margin: 20px auto;
+				cursor: pointer;
+			}
+			
+			#pic2 {
+				width: 100px;
+				height: 100px;
+				margin: 20px auto;
+				cursor: pointer;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">个人实名认证</h1>
+		</header>
+		<div class="mui-content">
+			<div>
+				<p></p>
+			</div>
+			<div class="mui-card">
+				<ul class="mui-table-view">
+					<div class="mui-collapse-content">
+						<p style="color: red;">注意：认证信息一旦认证成功无法修改，请务必真实填写</p>
+						<form class="mui-input-group">
+							<div>
+								<input type="button" style="background-color: #288BC4;" id="bean" value="认证状态：">
+								<input id="user_authenticPer" type="button" value="">
+							</div>
+							<div class="mui-input-row">
+								<label>姓名：</label>
+								<input id="name" type="text" placeholder="请输入真实姓名" maxlength="20">
+							</div>
+							<div class="mui-input-row">
+								<label>性别：</label>
+								<button style="margin-top: 1%;" id="sex1" type="button" value="" class="" onclick="sex_choose(1)">男
+								<button style="margin-top: 1%;" id="sex2" type="button" value="" class="" onclick="sex_choose(2)">女
+							</div>
+							<div class="mui-input-row">
+								<label>身份证号：</label>
+								<input id="id_card" type="text" class="mui-input-clear" placeholder="请输入有效身份证号码" maxlength="18">
+							</div>
+							<div class="mui-input-row">
+								<label style="width: 60%;">上传身份证照片：</label>
+							</div>
+							<div style="margin-left: 20%;">
+								<label><p style="margin-left: 10%;margin-bottom: -5%;">正面照片&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;反面照片</p></label>
+								<form id="uploadForm" enctype="multipart/form-data">
+									<img id="pic" src="../images/idsample2.jpg">
+									<input id="upload1" name="file" accept="image/*" type="file" style="display: none" />
+									<img id="pic2" src="../images/idsample.png">
+									<input id="upload2" name="file2" accept="image/*" type="file" style="display: none" />
+							</div>
+							<div class="mui-button-row">
+								<button id="upto" class="mui-btn-primary" type="button" onclick="upload()" style="display: none;">保存上传</button>&nbsp;&nbsp;
+								<!--<button class="mui-btn-primary" type="button" onclick="photo()">上传照片</button>-->
+							</div>
+						</form>
+						</form>
+					</div>
+				</ul>
+			</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/urlconfiguration.js"></script>
+		<script src="../js/jquery-1.6.2.min.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
+		<script src="http://lib.sinaapp.com/js/jquery/1.12.4/jquery-1.12.4.min.js"></script>
+		<script type="text/javascript">
+			var sex;
+			var src1, src2, src3, src4, name, id_card;
+			var user_id = localStorage.getItem("user_id");
+			var user_authenticPer = localStorage.getItem("user_authenticPer");
+			var id;
+			var server = url_1 + "get_commit.do?"
+			var files1 = [];
+			var files2 = [];
+
+			//进入加载
+			(function($, doc) {
+				$.init();
+				$.ready(function() {
+					var user_id = localStorage.getItem("user_id");
+					console.log(user_id);
+					jQuery.ajax({
+						contentType: "application/json",
+						type: "GET",
+						url: url_1 + "get_UserMes.do?jsoncallback=?",
+						data: "user_id=" + user_id,
+						dataType: "json",
+						success: function(data) {
+							console.log(data.user.id + "userid");
+							user_authenticPer = data.user.user_authenticPer;
+							localStorage.setItem("name", data.user.name);
+							localStorage.setItem("user_authenticPer", data.user.user_authenticPer);
+							console.log(name);
+							localStorage.setItem("src1", data.user.id_card_front_url);
+							console.log("src1qq" + data.user.id_card_front_url)
+							localStorage.setItem("src2", data.user.id_card_back_url);
+							localStorage.setItem("sex", data.user.sex);
+							localStorage.setItem("id_card", data.user.id_card);
+							if(user_authenticPer == 1) {
+								document.getElementById("user_authenticPer").setAttribute("value", "已认证");
+								mui.alert("您已认证");
+							} else if(user_authenticPer == 0) {
+								document.getElementById("user_authenticPer").setAttribute("value", "未认证");
+								document.getElementById("upto").setAttribute("style", "display: ;");
+								mui.alert("您还未认证");
+							} else if(user_authenticPer == 2) {
+								document.getElementById("user_authenticPer").setAttribute("value", "审核中");
+								mui.alert("审核中，请耐心等待");
+							}
+						},
+						error: function() {
+							$.alert("网络连接出错！");
+						}
+					});
+				});
+				name = localStorage.getItem("name");
+				sex = localStorage.getItem("sex");
+				id_card = localStorage.getItem("id_card");
+				if(name == "undefined") {
+					name = "输入姓名";
+				}
+				if(id_card == "undefined") {
+					id_card = "输入身份证号";
+				}
+				if(sex == "男") {
+					document.getElementById("sex1").setAttribute("class", "mui-btn-danger");
+					document.getElementById("sex2").setAttribute("class", "");
+				}
+				if(sex == "女") {
+					document.getElementById("sex2").setAttribute("class", "mui-btn-danger");
+					document.getElementById("sex1").setAttribute("class", "");
+				}
+				document.getElementById("name").setAttribute("placeholder", name);
+				document.getElementById("id_card").setAttribute("placeholder", id_card);
+				src1 = localStorage.getItem("src1");
+				src3 = pic_1 + src1;
+				src2 = localStorage.getItem("src2");
+				src4 = pic_1 + src2;
+				console.log("src4:" + src4);
+				console.log("src1:" + src1);
+				if(src1 != "undefined" || src2 != "undefined") {
+					jQuery("#pic").attr("src", src3);
+					jQuery("#pic2").attr("src", src4);
+				}
+			})(mui, document);
+            //身份证验证
+			function isCardNo(card) {
+				// 身份证号码为15位或者18位，15位时全为数字，18位前17位为数字，最后一位是校验位，可能为数字或字符X 
+				var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+				if(reg.test(card) === false) {
+					mui.alert("身份证输入不合法");
+					return false;
+				}
+			}
+
+			//性别选择
+			function sex_choose(id) {
+				M = document.getElementById("sex1");
+				W = document.getElementById("sex2");
+				if(id == 1) {
+					M.setAttribute("class", "mui-btn-danger");
+					W.setAttribute("class", "");
+					sex = "男";
+					console.log(sex);
+				} else {
+					W.setAttribute("class", "mui-btn-danger");
+					M.setAttribute("class", "");
+					sex = "女";
+					console.log(sex);
+				}
+			}
+
+			$("#id_card").blur(function() {
+				var id_card = $("#id_card").val();
+				$("#id_card").css("background-color", "white");
+				 isCardNo(id_card);
+			});
+
+			// 上传图片和信息
+			function upload() {
+				var account1 = document.getElementById("name").value;
+				var account2 = document.getElementById("id_card").value;
+				//var account3 = document.getElementById("showUserPicker").value;
+				var account3 = sex;
+				if(account2.length != 18) {
+					mui.alert("身份证号码格式错误！");
+				}
+				if(user_authenticPer == 1) {
+					document.getElementById("user_authenticPer").setAttribute("value", "已认证");
+					alert("您已认证");
+				} else if(user_authenticPer == 2) {
+					document.getElementById("user_authenticPer").setAttribute("value", "审核中");
+					alert("审核中，请耐心等待");
+				} else {
+					if(files1.length <= 0 || files2.length <= 0) {
+						plus.nativeUI.alert("请添加照片！");
+						return;
+					}
+					var wt = plus.nativeUI.showWaiting();
+					var task = plus.uploader.createUpload(server, {
+							method: "POST"
+						},
+						function(t, status) { //上传完成
+							console.log(t.responseText);
+							if(t.responseText == 'null({"flag":"3"})') {
+								mui.alert("照片保存失败");
+								wt.close();
+							} else
+							if(t.responseText == 'null({"flag":"5"})') {
+								mui.alert("审核中，请等待");
+								wt.close();
+							} else
+							if(t.responseText == 'null({"flag":"4"})') {
+								mui.alert("填写数据错误");
+								wt.close();
+							} else
+							if(t.responseText == 'null({"flag":"1"})') {
+								mui.alert("已实名认证");
+								wt.close();
+							} else
+							if(t.responseText == 'null({"flag":"2"})') {
+								mui.alert("上传成功");
+								wt.close();
+							} else {
+								mui.alert("上传失败");
+								wt.close();
+							}
+						}
+					);
+					task.addData("name", account1);
+					localStorage.setItem("name", account1);
+					task.addData("id_card", account2);
+					localStorage.setItem("id_card", account2);
+					task.addData("user_id", user_id);
+					task.addData("sex", account3);
+					localStorage.setItem("sex", account3);
+					var f1 = files1[files1.length - 1];
+					task.addFile(f1.path, {
+						key: "image_01"
+					});
+					var f2 = files2[files2.length - 1];
+					task.addFile(f2.path, {
+						key: "image_02"
+					});
+					task.start();
+				}
+			}
+
+			function photo() {
+				if(mui.os.plus) {
+					var a = [{
+						title: "拍照"
+					}, {
+						title: "从手机相册选择"
+					}];
+					plus.nativeUI.actionSheet({
+						title: "照片上传",
+						cancel: "取消",
+						buttons: a
+					}, function(b) { /*actionSheet 按钮点击事件*/
+						switch(b.index) {
+							case 0:
+								break;
+							case 1:
+								appendByCamera(); /*拍照*/
+								break;
+							case 2:
+								appendByGallery(); /*打开相册*/
+								break;
+							default:
+								break;
+						}
+					})
+				}
+			}
+			// 拍照添加文件
+			function appendByCamera() {
+				plus.camera.getCamera().captureImage(function(p) {
+
+					plus.io.resolveLocalFileSystemURL(p, function(entry) {
+						var s = entry.toLocalURL();
+						appendFile(s);
+						console.log("拍照1：" + s);
+						if(id == 1) {
+							console.log(s);
+							document.getElementById("pic").src = s;
+						}
+						if(id == 2) {
+							document.getElementById("pic2").src = s;
+						}
+					})
+				});
+			}
+			// 从相册添加文件
+			function appendByGallery() {
+				plus.gallery.pick(function(p) {
+					appendFile(p);
+					console.log("照片1：" + p);
+				});
+			}
+			// 向files[]中添加照片
+			var index = 1;
+			//          var src1,src2;
+			function appendFile(p) {
+				if(id == 1) {
+					files1.push({
+						name: "uploadkey" + index,
+						path: p
+					});
+					console.log("拍照2：" + p);
+					$("#pic").attr("src", p);
+					localStorage.setItem("src1", p);
+				}
+				if(id == 2) {
+					files2.push({
+						name: "uploadkey" + index,
+						path: p
+					});
+					console.log("照片2：" + p);
+					$("#pic2").attr("src", p);
+					localStorage.setItem("src2", p);
+				}
+				index++;
+			}
+			$(function() {
+				$("#pic").click(function() {
+					id = 1;
+					photo();
+				});
+				$("#pic2").click(function() {
+					id = 2;
+					photo();
+				});
+			});
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<!--App自定义的css-->
+		<!--<link rel="stylesheet" type="text/css" href="../css/app.css"/>-->
+		<style type="text/css">
+			.sk {
+				background: #f8f89d;
+			}
+			
+			.bkys {
+				border-style: ridge;
+				border-radius: 10px 10px 10px 10px;
+				background: ;
+			}
+			 
+			h4{
+				font-weight: normal;
+				margin-top: 13px;
+			}
+			.ban{
+				width: 49%;
+			}
+			span{
+				 font-weight: normal;
+				 margin-top: 10px;
+				line-height: 1em;
+				display:block;
+			}
+		</style>
+
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<span id="showtitle" class="mui-title"></span>
+		</header>
+		<div id="" style="height: 40px;width: ;padding: 10px 10px 10px 10px;">
+
+		</div>
+
+		<div id="work_show">
+
+		</div>
+		<div id="" style="height: 50px;">
+		</div>
+		<nav class="mui-bar mui-bar-tab" style="margin-bottom: ;">
+			<button class="mui-btn  mui-btn-primary" style="width: 48%;float:left ;margin-left:1%;" onclick="newpublish()"><h4 style="margin-top: 0px; font-size:17px; ">添加工种</h4></button>
+			<button class="mui-btn mui-btn-primary" style="width: 48%;float:right ;margin-right: 1%;" onclick="uppublish()"><h4 style="margin-top: 0px;font-size:17px;">删除发布</h4></button>
+			<br />
+		</nav>
+		<script src="../js/urlconfiguration.js"></script>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
+		<script src="../js/mui.picker.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script src="../js/city.data.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/jquery-1.6.2.min.js"></script>
+		<script src="../js/city.data-3.js" type="text/javascript" charset="utf-8"></script>
+		<script>
+			mui.init({
+				swipeBack: true //启用右滑关闭功能
+			});
+		</script>
+
+		<script>
+			var sameitem = [];
+			var sameitemflag = 0;
+			var worknumber = 1;
+			var peoplenumber = 1;
+			var jobid = [];
+			var userid = [];
+			var recordid = [];
+			var userphone = [];
+			var _ordertimer = null; //计时器相关
+			var time;
+			var deleteflag = 1;
+
+			var job_id;
+
+			
+
+			mui.plusReady(function() {
+				/*var old_back = mui.back;
+					mui.back = function() {
+						var wobj = plus.webview.getWebviewById("mypublishlist.html");
+						wobj.reload(true);
+						old_back()
+					}*/
+				var self = plus.webview.currentWebview();
+				job_id = self.job_id;console.log("Job:"+job_id);alert(job_id);
+				
+				document.getElementById("showtitle").innerHTML = self.publish_address;
+				user_id = self.user_id;
+				start();
+			})
+			//生成状态，确认用工状态
+			function creatability_1(jobitemid, userid, phonenumber, recordid, jobuserid, jobtypeid) {
+				var html = document.getElementById("work_" + jobitemid + "_people_" + userid + "_ability").innerHTML;
+				document.getElementById("work_" + jobitemid + "_people_" + userid + "_ability").innerHTML = html +
+					'<a  class="mui-btn mui-btn-success mui-icon mui-icon mui-icon-phone " onclick="phone(' + phonenumber + ')">电话</a>' +
+					'<a  class="mui-btn mui-btn-success mui-icon  mui-icon-person " onclick="changeworkstatus(' + recordid + ',1,0,0,0,0)">确认用工</a>'
+			}
+
+			//生成状态，确认开工状态
+
+			function creatability_2(jobitemid, userid, recordid, jobuserid, jobtypeid) {
+				var html = document.getElementById("work_" + jobitemid + "_people_" + userid + "_ability").innerHTML;
+				document.getElementById("work_" + jobitemid + "_people_" + userid + "_ability").innerHTML = html +
+					'<a style="" class="mui-btn mui-btn-success mui-icon mui-icon-person" onclick="changeworkstatus(' + recordid + ',2,0,0,0,0)">开工</a>'
+
+			}
+
+			//生成状态，工作中或者返工中
+
+			function creatability_3(jobitemid, userid, reworkstuse, jobuserid, jobtypeid) {
+				var sta;
+				if(reworkstuse == 0) {
+					sta = "工作中";
+				}
+				if(reworkstuse == 1) {
+					sta = "返工中";
+				}
+				var html = document.getElementById("work_" + jobitemid + "_people_" + userid + "_ability").innerHTML;
+				document.getElementById("work_" + jobitemid + "_people_" + userid + "_ability").innerHTML = html +
+				'<a style="" class="mui-btn mui-btn-grey mui-icon mui-icon-person ">' + sta + '</a>'
+
+					//'<button style="float:rigth;" class="mui-btn mui-btn-grey mui-icon mui-icon-person ban">' + sta + '</button>'
+			}
+
+			//生成状态，完工或返工
+
+			function creatability_4(jobitemid, userid, recordid, reworkstuse, jobuserid, jobtypeid, name) {console.log(name);
+				var html = document.getElementById("work_" + jobitemid + "_people_" + userid + "_ability").innerHTML;
+				if(reworkstuse == 0) {
+					document.getElementById("work_" + jobitemid + "_people_" + userid + "_ability").innerHTML = html +
+						'<a style=";margin-left:;" class="mui-btn mui-btn-success mui-icon mui-icon-person" onclick="changeworkstatus(' + recordid + ',3,' + jobitemid + ',' + userid + ',' + jobuserid + ',' + jobtypeid + ')">完工</a>' +
+						'<a style="" class="mui-btn mui-btn-success mui-icon mui-icon-person" onclick="changeworkstatus(' + recordid + ',4,' + jobitemid + ',' + userid + ',' + jobuserid + ',' + jobtypeid + ')">返工</a>'
+				}
+				if(reworkstuse == 1) {
+					document.getElementById("work_" + jobitemid + "_people_" + userid + "_ability").innerHTML = html +
+						'<a style="width:;margin-left:;" class="mui-btn mui-btn-success mui-icon mui-icon-person" onclick="changeworkstatus(' + recordid + ',3,' + jobitemid + ',' + userid + ',' + jobuserid + ',' + jobtypeid + ')">完工</a>' +
+						'<a style="width:;" class="mui-btn mui-btn-success mui-icon mui-icon-person" onclick="changeworkstatus(' + recordid + ',4,' + jobitemid + ',' + userid + ',' + jobuserid + ',' + jobtypeid + ')">返工</a>'
+				}
+
+			}
+
+			//生成状态，已完工
+
+			function creatability_5(jobitemid, userid, recordid, jobuserid, jobtypeid) {
+				var html = document.getElementById("work_" + jobitemid + "_people_" + userid + "_ability").innerHTML;
+				document.getElementById("work_" + jobitemid + "_people_" + userid + "_ability").innerHTML = html +
+					'<a style="margin-left:;" class="mui-btn mui-btn-grey mui-icon mui-icon-person">已完工</a>'
+			}
+
+			//生成状态，等待工人确定开工
+
+			function creatability_6(jobitemid, userid, recordid, jobuserid, jobtypeid) {
+				var html = document.getElementById("work_" + jobitemid + "_people_" + userid + "_ability").innerHTML;
+				document.getElementById("work_" + jobitemid + "_people_" + userid + "_ability").innerHTML = html +
+				//'<button style="float:rigth; display="none";" class="mui-btn mui-btn-grey mui-icon mui-icon-person" >待工人确认开工</button>'+
+					'<button style="margin-left:;" class="mui-btn mui-btn-grey mui-icon mui-icon-person" >待工人确认开工</button>'
+
+			}
+
+			//自动拨打该工人电话
+
+			function phone(num) {
+				event.stopPropagation();
+				plus.device.dial("15354262712", false);
+			} 
+
+			function start() {
+				
+ 
+				mui.toast('开始查询');console.log(job_id);
+				$.ajax({
+					contentType: "application/json",
+					type: "GET",
+					url: url_3 + "show_job_byid.do?jsoncallback=?",
+					//url: azurl + "/GoodJob/myjson/json2.json",
+					data: "&job_id=" + job_id,
+					dataType: "json",
+					success: function(data) {
+						/*var timeset = 1;
+						var timer = setInterval(function() {
+							if(timeset == 0) {
+								clearInterval(timer);
+								w1.close();
+							} else {
+								--timeset;
+							}
+						}, 1000);*/
+						if(data.flag == 1) {
+						//if(1) {
+
+							mui.toast('查询成功');
+							for(i = 0; i < data.msg.length; i++) {
+
+								if(data.msg[i].jobitem_users.length != 0) {
+									deleteflag = 0;
+								}
+
+							}
+							for(i = 0; i < data.msg.length; i++) {
+								jobid[i] = data.msg[i].jobitem.id;
+								recordid[i] = [];
+								userid[i] = [];
+								userphone[i] = [];
+								var talent = "";
+								for(x = 0; x < data.msg[i].skills.length; x++) {
+									if(talent==""){
+										talent=data.msg[i].skills[x].name;
+									}else{
+										talent = talent + "," + data.msg[i].skills[x].name;
+									}
+									
+								}
+
+								var statenum = data.msg[i].jobitem.jobitem_status;
+								var state;
+								if(statenum == 2 || statenum == 0) {
+									state = "发布中";
+								}
+								if(statenum == 3) {
+									state = "待开工";
+								}
+								if(statenum == 5) {
+									state = "等待工人确定开工";
+								}
+
+								if(statenum == 1) {
+									if(data.msg[i].jobitem_users[0].rework_status == 0) {
+										state = "施工中";
+									} else {
+										state = "返工中";
+									}
+
+								}
+								if(statenum == 4) {
+									state = "待完工";
+								}
+								if(statenum == -1 || statenum == -2) {
+									state = "已完工";
+								}
+								var prestartdata;
+								if(data.msg[i].jobitem.pre_start_date){
+									prestartdata="预计开工时间："+changetimeformat(data.msg[i].jobitem.pre_start_date);
+								}else{
+									prestartdata="";
+								}
+															
+									var html = document.getElementById("work_show").innerHTML;
+									if(data.msg[i].jobitem.urgent_status=="1"){
+										document.getElementById("work_show").innerHTML = html +
+										'<div id="' + data.msg[i].jobitem.jobtype.id + '"  style="margin-top:10px ;margin-left:5%;margin-right:5%; background:white;" onclick="jobdetails('+data.msg[i].jobitem.id+')"><span>工种：' + data.msg[i].jobitem.jobtype.name + '<button style="float:right ;margin-top:10px ;" class="mui-btn  mui-btn-primary" onclick="update(' + data.msg[i].jobitem.jobitem_status + ',' + data.msg[i].jobitem.id + ',1,' + data.msg[i].jobitem.urgent_status + ')">修改</button></span>' +
+										'<span>需求技能：' + talent + '</span>' +
+										'<span >加急费用：' + data.msg[i].jobitem.urgent_fee + '<button style="float:right;margin-top:-10px ;"  class="mui-btn  mui-btn-primary" onclick="update(' + data.msg[i].jobitem.jobitem_status + ',' + data.msg[i].jobitem.id + ',2,' + data.msg[i].jobitem.urgent_status + ')">删除</button></span>' +
+										'<span >状态：' + state + '</span><span id="">'+prestartdata+'</span>' +
+										'<ul id="work_' + data.msg[i].jobitem.id + '_people" class="mui-table-view"></ul><br/></div>' 
+									
+									}else{
+										document.getElementById("work_show").innerHTML = html +
+										'<div id="' + data.msg[i].jobitem.jobtype.id + '" style="margin-left:5%;margin-right:5%; background:white;padding-top:; "onclick="jobdetails('+data.msg[i].jobitem.id+')"><span style="margin-top:20px;"><br/><div style="margin-left:5%;margin-right:5%;">工种：' + data.msg[i].jobitem.jobtype.name + '<button style="float:right ;margin-top:10 ;" class="mui-btn  mui-btn-primary" onclick="update(' + data.msg[i].jobitem.jobitem_status + ',' + data.msg[i].jobitem.id + ',1,' + data.msg[i].jobitem.urgent_status + ')">修改</button></span>' +
+										'<span>需求技能：' + talent + '</span>' +
+										'<span >状态：' + state + '<button style="float:right;margin-top:-20px ;"  class="mui-btn  mui-btn-primary" onclick="update(' + data.msg[i].jobitem.jobitem_status + ',' + data.msg[i].jobitem.id + ',2,' + data.msg[i].jobitem.urgent_status + ')">删除</button></span>' +
+										'<span id="">'+prestartdata+'</span><br/><ul id="work_' + data.msg[i].jobitem.id + '_people" class="mui-table-view" style="margin-left:%;margin-right:%;background: ;"></ul></div></div>' 					
+									}
+									sameitem[i] = data.msg[i].jobitem.id;
+									worknumber = parseInt(worknumber) + 1;
+									for(j = 0; j < data.msg[i].jobitem_users.length; j++) {
+										recordid[i][j] = data.msg[i].jobitem_users[j].id;
+										userid[i][j] = data.msg[i].jobitem_users[j].user.id;
+										userphone[i][j] = data.msg[i].jobitem_users[j].user.phone;
+										num = worknumber - 1;
+										var skilled = "";
+
+										for(y = 0; y < data.msg[i].jobitem_users[j].user.skills.length; y++) {
+											if(skilled==""){
+												skilled=data.msg[i].jobitem_users[j].user.skills[y].name;
+											}else {
+												skilled = skilled + "," + data.msg[i].jobitem_users[j].user.skills[y].name;
+								
+											}
+													}
+
+										var html = document.getElementById("work_" + data.msg[i].jobitem.id + "_people").innerHTML;
+										document.getElementById("work_" + data.msg[i].jobitem.id + "_people").innerHTML = html +
+											'<li class="mui-table-view-cell " style="width: 100%;margin-top:10px ;">' +
+											'<div class="mui-slider-handle" onclick="Personaldetails(' + data.msg[i].jobitem_users[j].user.id + ')">' +
+											'<div class="mui-table-cell">' +
+											'<span><span class="mui-icon mui-icon-contact" style="display:inline-block"></span>:<h4 style="display:inline-block">' + data.msg[i].jobitem_users[j].user.name + '</h4>&nbsp;&nbsp;&nbsp;<span>评分：' + data.msg[i].jobitem_users[j].user.avgscore_worker + '</span></span>' +
+											'<span>技能：' + skilled + '</span>' +
+											'<span id="work_' + data.msg[i].jobitem.id + '_people_' + data.msg[i].jobitem_users[j].user.id + '_status"></span></div></div>'+
+											'<div id="work_' + data.msg[i].jobitem.id + '_people_' + data.msg[i].jobitem_users[j].user.id + '_ability" name="'+data.msg[i].jobitem_users[j].user.name+'" class="" style="float:right;"></div></li>'
+
+										if(data.msg[i].jobitem.jobitem_status == 4 && data.msg[i].jobitem_users[j].rework_status == 0) {
+											//var startbc=document.getElementById("work_"+data.msg[i].id+"_people_"+data.msg[i].user[j].id+"_status");
+											var time = data.msg[i].jobitem.end_request_date;
+											go(document.getElementById("work_" + data.msg[i].jobitem.id + "_people_" + data.msg[i].jobitem_users[j].user.id + "_status"), data.msg[i].jobitem.id, data.msg[i].jobitem_users[j].user.id, recordid[i][j], time);
+
+										}
+										peoplenumber = parseInt(peoplenumber) + 1;
+
+										//根据标质量，生成不同的状态
+										if(data.msg[i].jobitem.jobitem_status == 2) {
+											creatability_1(data.msg[i].jobitem.id, data.msg[i].jobitem_users[j].user.id, userphone[i][j], recordid[i][j], data.msg[i].jobitem.job.user.id, data.msg[i].jobitem.jobtype.id);
+										}
+										if(data.msg[i].jobitem.jobitem_status == 3) {
+											creatability_2(data.msg[i].jobitem.id, data.msg[i].jobitem_users[j].user.id, recordid[i][j], data.msg[i].jobitem.job.user.id, data.msg[i].jobitem.jobtype.id);
+										}
+										if(data.msg[i].jobitem.jobitem_status == 1) {
+											creatability_3(data.msg[i].jobitem.id, data.msg[i].jobitem_users[j].user.id, data.msg[i].jobitem_users[j].rework_status, data.msg[i].jobitem.job.user.id, data.msg[i].jobitem.jobtype.id);
+										}
+										if(data.msg[i].jobitem.jobitem_status == 4) {
+											creatability_4(data.msg[i].jobitem.id, data.msg[i].jobitem_users[j].user.id, recordid[i][j], data.msg[i].jobitem_users[j].rework_status, data.msg[i].jobitem.job.user.id, data.msg[i].jobitem.jobtype.id, data.msg[i].jobitem_users[j].user.name);
+										}
+										if(data.msg[i].jobitem.jobitem_status == -1 || data.msg[i].jobitem.jobitem_status == -2) {
+											creatability_5(data.msg[i].jobitem.id, data.msg[i].jobitem_users[j].user.id, recordid[i][j], data.msg[i].jobitem.job.user.id, data.msg[i].jobitem.jobtype.id);
+										}
+										if(data.msg[i].jobitem.jobitem_status == 5) {
+											creatability_6(data.msg[i].jobitem.id, data.msg[i].jobitem_users[j].user.id, recordid[i][j], data.msg[i].jobitem.job.user.id, data.msg[i].jobitem.jobtype.id);
+										}
+
+									}								
+							}
+						} else if(data.flag == 0) {
+							mui.alert('查询失败', '未知错误', function() {});
+						} else {
+							mui.alert('操作失败', '未知错误', function() {});
+						}
+
+					},
+					error: function() {
+						mui.alert('网络连接错误', '错误', function() {});
+					}
+				});
+			}
+
+			//改变用户状态，确认用工，完工等操作都在次函数中进行。
+			//4是其中的一个特例，jobitem是name属性。因为4在后边的运行当中包括下一个页面用不到许多属性
+			//但是需要那么属性。在不影响其他函数的运行的情况下，用其中一个位置传出name这个参数。
+
+			function changeworkstatus(recordid, flag, jobitemid, userid, jobuserid, jobtypeid) {
+				
+                event.stopPropagation();
+                var btnArray = ['确认操作', '取消'];
+					mui.confirm('是否确认操作', '提示', btnArray, function(e) {
+						if(e.index == 0) {
+							if(flag == 1) {
+					url = url_3 + "ensure_user.do?jsoncallback=?";
+				}
+				if(flag == 2) {
+					url = url_3 + "start_request.do?jsoncallback=?";
+				}
+				if(flag == 3 || flag == 6 || flag == 5) {
+					url = url_3 + "end_response.do?jsoncallback=?";
+				}
+				if(flag == 4) {
+					jumptorework(recordid, jobitemid, userid, jobuserid, jobtypeid);
+					return;
+				}
+				var w2 = plus.nativeUI.showWaiting("正在进行操作，请等待...\n" + flag, {
+					loading: {
+						icon: "../images/waiting.png"
+					}
+				});
+				$.ajax({
+					contentType: "application/json",
+					type: "GET",
+					url: url,
+					data: "jobitem_user_id=" + recordid,
+					dataType: "json",
+					success: function(data) {
+						var timeset = 1;
+						var timer = setInterval(function() {
+							if(timeset == 0) {
+								clearInterval(timer);
+								w2.close();
+								if(data.flag == 1) {
+							mui.toast('修改成功');
+							/*document.getElementById("work_show").innerHTML = "";
+							start();*/
+							var self = plus.webview.currentWebview();
+							self.reload(true);
+							if(flag == 3 || flag == 5) {
+								jumptoevaluation(recordid, jobitemid, userid, jobuserid, jobtypeid);
+							}
+						} else if(data.flag == 0) {
+							mui.alert('删除失败', '未知错误', function() {});
+						} else {
+							mui.alert('操作失败', '未知错误', function() {});
+						}
+							} else {
+								--timeset;
+							}
+						}, 200);
+						
+
+						
+
+					},
+					error: function() {
+						w2.close();
+						mui.alert('网络连接错误', '错误', function() {});
+					}
+				});
+						} else {
+							return;
+						}
+					})
+				//flag 1:确认用工   2：开工      3：未返工的完工    4：返工      5：已返工的完工
+				//请求状态改变需要recordID数据。flag确定操作。3需要跳转评价，工种，评价人，被评价人  4 跳转：工作，工种，两人
+				
+			}
+			//删除工种
+			function update(divstatus, jobitem_id, num,urgent_status) {
+				event.stopPropagation();
+				if(num == 1) {
+					
+					if(divstatus!=0) {
+
+						mui.alert('该工作已处于工作中或已有人接单，不可修改', '操作错误', function() {});
+					}
+					else if(urgent_status=="1"){
+
+						mui.alert('该工作属于加急工作，不可修改', '操作错误', function() {});
+					}
+					else{
+						updatapub(jobitem_id);
+					}
+				}
+				if(num == 2) {
+					
+					var btnArray = ['确认删除', '取消'];
+					mui.confirm('确认删除', '提示', btnArray, function(e) {
+						if(e.index == 0) {
+							if(divstatus != 0 && divstatus != -2) {
+						mui.alert('该工作处于工作状态，不可删除', '操作错误', function() {});
+					} else {
+						//document.getElementById(obj).remove();
+						//提交数据
+						var w3 = plus.nativeUI.showWaiting("正在删除，请等待...\n", {
+							loading: {
+								icon: "../images/waiting.png"
+							}
+						});
+						$.ajax({
+							contentType: "application/json",
+							type: "GET",
+							url: url_3 + "delete_jobitem.do?jsoncallback=?",
+							data: "jobitem_id=" + jobitem_id,
+							dataType: "json",
+							success: function(data) {
+								var timeset = 1;
+								var timer = setInterval(function() {
+									if(timeset == 0) {
+										clearInterval(timer);
+										w3.close();
+									} else {
+										--timeset;
+									}
+								}, 200);
+								if(data.flag == 1) {
+									w3.close();
+									mui.toast('删除成功');
+									document.getElementById("work_show").innerHTML="";
+									start();
+
+								} else if(data.flag == 0) {
+									w3.close();
+									mui.alert('删除失败', '未知错误', function() {});
+								} else {
+									w3.close();
+									mui.alert('操作失败', '未知错误', function() {});
+								}
+							},
+							error: function() {
+								w3.close();
+								mui.alert('网络连接错误', '错误', function() {});
+							}
+						});
+					}
+						} else {
+							return;
+						}
+					})
+
+					
+				}
+			}
+
+			//删除发布
+			function uppublish() {
+				
+				var btnArray = ['确认删除', '取消'];
+					mui.confirm('是否确认删除', '提示', btnArray, function(e) {
+						if(e.index == 0) {
+							if(deleteflag == 1) {
+					var w4 = plus.nativeUI.showWaiting("正在删除，请等待...\n", {
+						loading: {
+							icon: "../images/waiting.png"
+						}
+					});
+					$.ajax({
+						contentType: "application/json",
+						type: "GET",
+						url: url_3 + "delete_job.do?jsoncallback=?",
+						data: "job_id=" + job_id,
+						dataType: "json",
+						success: function(data) {
+							var timeset = 1;
+							var timer = setInterval(function() {
+								if(timeset == 0) {
+									clearInterval(timer);
+									w4.close();
+									if(data.flag == 1) {
+								mui.toast('删除成功');
+
+								jumptopublishlist();
+							} else if(data.flag == 0) {
+								mui.alert('删除失败', '未知错误', function() {});
+							} else {
+								mui.alert('操作失败', '未知错误', function() {});
+							}
+								} else {
+									--timeset;
+								}
+							}, 200);
+							
+						},
+						error: function() {
+							w4.close();
+							mui.alert('网络连接错误', '错误', function() {});
+						}
+					});
+				} else if(deleteflag == 0) {
+					mui.alert('列表不为空，不可删除', '操作错误', function() {});
+				} else {
+					mui.alert('操作失败', '未知错误', function() {});
+				}
+						} else {
+							return;
+						}
+					})
+
+				
+
+			}
+
+			//自动完工倒计时
+			function leftTimer(enddate, obj, jobitemid, userid, recordid) {
+
+				var leftTime = (new Date(enddate)) - new Date(); //计算剩余的毫秒数
+				var days = parseInt(leftTime / 1000 / 60 / 60 / 24, 10); //计算剩余的天数
+				var hours = parseInt(leftTime / 1000 / 60 / 60 % 24, 10); //计算剩余的小时
+				var minutes = parseInt(leftTime / 1000 / 60 % 60, 10); //计算剩余的分钟
+				var seconds = parseInt(leftTime / 1000 % 60, 10); //计算剩余的秒数
+
+				if(days >= 0 || hours >= 0 || minutes >= 0 || seconds >= 0) obj.innerHTML = "自动完工倒计时：" + hours + "小时" + minutes + "分" + seconds + "秒";
+				if(days == 0 && hours == 0 && minutes == 0 && seconds == 1) {
+					mui.alert("您已自动完工");
+					
+					changeworkstatus(recordid, 6, jobitemid, userid, 0, 0);
+					window.clearInterval(_ordertimer);
+					_ordertimer = null;
+				}
+			}
+
+			//设置倒计时，校准时间格式
+			function go(obj, jobitemid, userid, recordid, time) {
+
+				//Dec 22, 2017 12:00:00 AM
+				var time1 = time.split(" ");
+				time1[0] = monthchange(time1[0]);
+				time1[1] = parseInt(time1[1])
+				var number = [];
+				number[0] = time1[2];
+				number[1] = time1[0];
+				number[2] = time1[1] + 1;
+				var number1 = number.join("-");
+
+				if(time1[4] == "PM") {
+					var list = time1[3].split(":");
+					list[0] = parseInt(list[0]) + 12;
+					time1[3] = list.join(":");
+				}
+
+				var number2 = time1[3];
+				var time2 = [];
+				time2[0] = number1;
+				time2[1] = number2;
+				time3 = time2.join(" ");
+
+				//var time = "2018-1-9 9:00:00";
+				var date1 = new Date(),
+					data2 = new Date(time3);
+				if(data2 < date1) {
+					mui.toast('你已经自动完工');
+					changeworkstatus(recordid, 6, jobitemid, userid, 0, 0);
+					return;
+				} //设置的时间小于现在时间退出
+				_ordertimer = setInterval(function() {
+					leftTimer(data2, obj, jobitemid, userid, recordid)
+				}, 200);
+			}
+
+			//月份转换
+			function monthchange(str) {
+				if(str == "Jan") {
+					return 1;
+				}
+				if(str == "Feb") {
+					return 2;
+				}
+				if(str == "Mar") {
+					return 3;
+				}
+				if(str == "Apr") {
+					return 4;
+				}
+				if(str == "May") {
+					return 5;
+				}
+				if(str == "Jun") {
+					return 6;
+				}
+				if(str == "Jul") {
+					return 7;
+				}
+				if(str == "Aug") {
+					return 8;
+				}
+				if(str == "Sep") {
+					return 9;
+				}
+				if(str == "Oct") {
+					return 10;
+				}
+				if(str == "Nov") {
+					return 11;
+				}
+				if(str == "Dec") {
+					return 12;
+				}
+
+			}
+
+			//跳转到评价页面
+			function jumptoevaluation(recordid, jobitemid, touserid, jobuserid, jobtypeid) {
+
+				mui.openWindow({
+					url: 'evaluation.html?t=' + Math.random(),
+					id: 'evaluation.html',
+					extras: {
+						userid: touserid,
+						jobitem_user_id: recordid,
+						jobtypeid: jobtypeid,
+						jobuserid: jobuserid,
+						jobitemid: jobitemid,
+						evaluationflag: 1
+					},createNew:true
+				})
+			}
+
+			//跳转到返工页面
+
+			function jumptorework(recordid, jobitemid, touserid, jobuserid, jobtypeid) {
+
+				mui.openWindow({
+					url: 'rework.html?t=' + Math.random(),
+					id: 'rework.html',
+					extras: {
+						jobitem_user_id: recordid,
+						name:document.getElementById("work_" + jobitemid + "_people_" + userid + "_ability").name
+					},createNew:true
+				})
+			}
+
+			//添加工种，跳转到发布页面
+
+			function newpublish() {
+				plus.webview.close('publish.html');
+
+				mui.openWindow({
+					url: '../publish/publish.html?t=' + Math.random(),
+					id: 'publish.html',
+					extras: {
+						user_id: user_id,
+						operation: 2,
+						updataid: job_id,
+						jobitem_id:0
+					},createNew:true
+				})
+			}
+
+			//跳转到个人详情页面
+
+			function Personaldetails(num) {
+event.stopPropagation();
+				localStorage.setItem("user_id2", num);
+				mui.openWindow({
+					url: '../person_center/workerinfo.html?t=' + Math.random(), //个人详情页面的路径
+					id: 'workerinfo.html',
+					extras: {},createNew:true
+				})
+			}
+
+			//修改发布信息，跳转到发布页面
+			function updatapub(jobitem_id) {
+				event.stopPropagation();
+				var updataflag = 1;
+
+				mui.openWindow({
+					url: '../publish/publish.html?t=' + Math.random(),
+					id: 'publish.html',
+					extras: {
+						user_id: user_id,
+						operation: 1,
+						updataid: job_id,
+						jobitem_id: jobitem_id
+					},createNew:true
+				})
+				
+			}
+
+			//删除发布成功，跳转到发布列表
+			function jumptopublishlist() {
+				
+				
+				mui.openWindow({
+					url: 'mypublishlist.html?t=' + Math.random(),
+					id: 'mypublishlist.html',
+					extras: {
+						user_id: user_id,
+						
+					},createNew:true
+					 
+				})
+				
+			}
+			function jobdetails(num) {
+				console.log(num);
+				mui.openWindow({
+					url: 'orderinfo.html?t=' + Math.random(),
+					id: 'orderinfo.html',
+					extras: {
+						user_id: user_id,
+						operation: 1,
+						updataid: job_id,
+						jobitem_id: num
+						
+					},createNew:true
+					 
+				})
+			}
+			function changetimeformat(time){
+				var time1=time.split(" ");
+				var time2=[];
+				time2[2]=parseInt(time1[1]);
+				time2[1]=monthchange(time1[0]);
+				time2[0]=time1[2];
+				var time3=time2.join("-");
+				return time3;
+			}
+			
+		</script>
+		</script>
+	</body>
+
+</html>
+<!--5.请求开工 4.请求完工 3.被选中 2.有人接单，等待选中 1.施工中 0.结束 -1.未有人接单
+-->
+<!--5.请求开工 4.请求完工 3.被选中 2.有人接单，等待选中 1.施工中 0.未有人接单 -1.结束
+
+-1等待评价
+
+-2 订单已结束
+-->      
+<!--job里的status是这条数据的状态，job_status是这个job有没有完成，外面的jobitem_status就是有6个值的，status也是这条数据的状态-->

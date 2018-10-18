@@ -1,0 +1,55 @@
+
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="../css/mui.min.css">
+	</head>
+
+<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-icon mui-icon-left-nav mui-pull-left mui-action-back"></a>
+			<h1 class="mui-title">帮助中心</h1>
+		</header>
+		<div class="mui-content">
+			<div> 
+				<pa><h4>标签介绍</h4></p>
+				<label>姓名：</label>
+				<p>是您在实名认证之后显示您的真实姓名</p>
+				<label>工长评分：</label>
+				<p>是当您为工长状态下，工人对工长的评分；如果您是工人，那么此状态栏不会显示评分。评分依次从低到高为：一星、二星、三星、四星、五星，五星为最佳工长</p>
+				<label>工人评分：</label>
+				<p>当您为工人状态时，完成订单后，工长给予工人的评分。评分依次从低到高为：一星、二星、三星、四星、五星，五星为最佳工人</p>
+				<label>技能：</label>
+				<p>当您为工人状态时，系统根据工人所完工的全部订单，综合评估显示工人的技能</p>
+				<label>电话：</label>
+				<p>是您注册时的手机号码，是在工人接单后，工长联系工人的电话</p>
+				<label>居住地址：</label>
+				<p>显示您现在所居住的地址，利于工长选人时，提高工人的信誉度</p>
+				<label>认证公司：</label>
+				<p>是您在完成认证公司之后，显示您公司的名字；公司认证之后，工人选择工长发布的工作可能性更高哦</p>
+				<label>公司地址：</label>
+				<p>是您在完成公司认证之后显示的公司地址，方便工人查看工长的信息</p>
+			    <label>最大接单量：</label>
+			    <p>显示您目前可接单和发单的数量</p>
+			    <label>微信号：</label>
+			    <p>用于您的账户充值和提现，务必真实有效</p>
+			    
+			</div>
+				</div>
+		<script src="../js/mui.min.js"></script>
+		<script>
+			mui.init({
+				swipeBack:true //启用右滑关闭功能
+			});
+		</script>
+	</body>
+	
+</html>

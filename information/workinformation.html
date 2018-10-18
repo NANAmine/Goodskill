@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<!--App自定义的css-->
+		<link rel="stylesheet" type="text/css" href="../css/app.css" />
+		<link href="../css/mui.picker.css" rel="stylesheet" />
+		<link href="../css/mui.poppicker.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="../css/mui.picker.min.css" />
+		<style>
+			.mui-btn {
+				font-size: 16px;
+				padding: 8px;
+				margin: 3px;
+			}
+			
+			h5.mui-content-padded {
+				margin-left: 3px;
+				margin-top: 20px !important;
+			}
+			
+			h5.mui-content-padded:first-child {
+				margin-top: 12px !important;
+			}
+			
+			.ui-alert {
+				text-align: center;
+				padding: 20px 10px;
+				font-size: 16px;
+			}
+			
+			.worktype {
+				width: 50%;
+				float: left;
+			}
+			.bkys{
+				border-style:ridge;
+			}
+			.jili{
+				
+			}
+			h5{
+				margin-top:10px ;
+				padding-left:10% ;
+				padding-right:10% ;
+				line-height: 1em;
+			}
+			.yanshi1{
+				background: #e4e0e0;
+				height: 80px;
+			}
+			.yangshi2{
+				height: 80px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<!--<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">详细信息</h1>
+		</header>
+		<div class="jili" style="margin-top: 80px;">
+			<h5 id="address"><span>地址：</span><span>河北省-廊坊市-广阳区-吉利小区</span></h5>
+			<h5 id="address">姓名：李师傅</h5>
+			<h5 id="address">年龄：32岁</h5>
+			<h5 id="address">性别：男</h5>
+			<h5 id="address"><span style="width: 20%;">工作经历：</span><span style="width: 80%;">河北省-廊坊市-广阳区-吉利小区木工工作，吉祥小区电工工作</span></h5>
+			
+		</div> 
+		<div class="jili">
+			<h5 id="jobtype">工种：电工</h5>
+			<h5>技能一：技能熟练度</h5>
+			<h5>技能二：技能熟练度</h5>
+			<h5>技能三：技能熟练度</h5>
+		</div>
+		
+		<div id="" style="margin-left: 20%;margin-top: 40px;">
+			<button class="mui-btn mui-btn-outlined" style="width: 30%;">电话</button>
+			
+			
+		</div>-->
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">详细信息</h1>
+		</header>
+					<div id="" class="yanshi1" style="margin-top: 60px;">
+						<h5 style="float: left;width: 100%;">姓名</h5><h5 id="username" style="float: right;width: ;"></h5>
+					</div>
+					<div id="" class="yangshi2" >
+						<h5 style="float: left;width: 100%;">地址</h5><h5 id="address" style="float: right;width: ;">河北省-廊坊市-广阳区-吉利小区</h5>
+					</div>
+					<div id="" class="yanshi1">
+						<h5 style="float: left;width: 100%;">性别</h5><h5 id="sex" style="float: right;width: ;">男</h5>
+					</div>
+					<div id="" class="yangshi2">
+						<h5 style="float: left;width: 100%;">年龄</h5><h5 id="age" style="float: right;width: ;">32岁</h5>
+					</div>
+					<div id="" class="yanshi1">
+						<h5 style="float: left;width: 100%;">工种</h5><h5 id="worktype" style="float: right;width: ;">装潢工</h5>
+					</div>
+					<div id="" class="yangshi2">
+						<h5 style="float: left;width: 100%;">技能</h5><h5 id="skill" style="float: right;width: ;">砌墙,砸墙，装潢</h5>
+					</div>
+					评价:
+					<div id="" style="background: white;height: 60px">
+						<h5 style="height: 2px;"></h5>
+						<h5 >李工长：技艺精湛，经验丰富</h5>
+						<h5>评价语：这个工人特别勤劳，</h5>
+					</div>
+					<div id="" style="background: white;height: 60px">
+						<h5 style="height: 2px;"></h5>
+						<h5 >张工长：技艺不精湛，经验不丰富</h5>
+						<h5>评价语：这个工人特别不勤劳，</h5>
+					</div>
+					<div id="" style="background: white;height: 60px">
+						<h5 style="height: 2px;"></h5>
+						<h5 >张工长：技艺不精湛，经验不丰富</h5>
+						<h5>评价语：这个工人特别不勤劳，</h5>
+					</div>
+					<div style="height: 60px;background: ;"></div>
+					
+					<nav class="mui-bar mui-bar-tab" style="margin-bottom: ;">
+	<button class="mui-btn mui-btn-outlined" style="width: 100%;">电话</button>
+				
+</nav>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
+		<script src="../js/mui.picker.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script src="../js/city.data.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/city.data-3.js" type="text/javascript" charset="utf-8"></script>
+		<!--<script src="../js/myadd.js"></script>-->
+
+		<script>
+			
+			window.onload=function(){
+						mui.getJSON('http://127.0.0.1:8020/GoodJob/myjson/peoplemore.json', {
+							"name": "name",
+							"address": "address"
+						}, function(data) {
+							
+						
+							document.getElementById("username").innerHTML=data.name;
+							document.getElementById("address").innerHTML=data.address;
+							document.getElementById("sex").innerHTML=data.sex;
+							document.getElementById("age").innerHTML=data.age+"岁";
+							document.getElementById("worktype").innerHTML=data.worktype;
+							document.getElementById("skill").innerHTML=data.skill;
+						
+						})}
+		</script>
+	</body>
+
+</html>

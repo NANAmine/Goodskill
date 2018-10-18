@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html class="ui-page-login">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<script src="http://lib.sinaapp.com/js/jquery/1.12.4/jquery-1.12.4.min.js"></script>
+		<style type="text/css">
+			.code {
+				background: url(code_bg.jpg);
+				font-family: Arial;
+				font-style: italic;
+				color: blue;
+				font-size: 30px;
+				border: 0;
+				padding: 2px 3px;
+				letter-spacing: 3px;
+				font-weight: bolder;
+				float: left;
+				cursor: pointer;
+				width: 150px;
+				height: 60px;
+				line-height: 60px;
+				text-align: center;
+				vertical-align: middle;
+			}
+			
+			
+			a:hover {
+				text-decoration: underline;
+			}
+		
+			.mui-content {
+				height: 100%;
+			}
+			
+			.mui-input-group {
+				margin-top: 10px;
+			}
+			
+			
+			.mui-input-group label {
+				width: 30%;
+			}
+			
+			.mui-input-row button {
+				width: 30%;
+				margin-top: -9px;
+			}
+			
+			.mui-input-row label~input,
+			.mui-input-row label~select,
+			.mui-input-row label~textarea {
+				width: 66%;
+			}
+			
+			.mui-content-padded {
+				margin-top: 25px;
+			}
+			
+			
+			.mui-btn {
+				padding: 10px;
+			}
+			/*登录按钮大小调整*/
+			
+			.link-area {
+				display: block;
+				margin-top: 25px;
+				text-align: center;
+			}
+			/*密码和忘记密码位置调整*/
+			
+			.spliter {
+				color: #bbb;
+				padding: 10px 18px;
+			}
+			/*密码和验证码间距调整*/
+			
+			.oauth-area {
+				position: absolute;
+				bottom: 20px;
+				left: 0px;
+				text-align: center;
+				width: 100%;
+				padding: 0px;
+				margin: 0px;
+			}
+			
+			.oauth-area .oauth-btn {
+				display: inline-block;
+				width: 50px;
+				height: 50px;
+				background-size: 30px 30px;
+				background-position: center center;
+				background-repeat: no-repeat;
+				margin: 0px 20px;
+				border: solid 1px #ddd;
+				border-radius: 25px;
+			}
+			
+			.oauth-area .oauth-btn:active {
+				border: solid 1px #aaa;
+			}
+			
+			.oauth-area .oauth-btn.disabled {
+				background-color: #ddd;
+			}
+		</style>
+
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<img class="mui-title" src="../images/logo.png" style="margin: auto;width: 10%;"></img>
+		</header>
+		<div class="mui-content">
+			<div id="sliderSegmentedControl" class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+				<div class="mui-content-padded">
+					<div class="link-area">
+						<a href="login.html">密码登录</a>
+						<span class="spliter">|</span>
+						<a id="ident" href="login_code.html" style="color: #000000;">验证码登录</a>
+					</div>
+				</div>
+			</div>
+			<div class="mui-content">
+				<form id='login-form2' class="mui-input-group">
+					<div class="mui-input-row">
+						<label>手机号</label>
+						<input id='phonenumber' type="text" class="mui-input-clear mui-input" placeholder="请输入手机号" maxlength="11">
+					</div>
+					<div class="mui-input-row" id="get_code"style="display: none;">
+						<label style="width: 35%;"><button type="button" id="test1" style="width: 100%;">获取验证码</button></label>
+						<input id='checknumber' type="text" class="mui-input-clear mui-input" placeholder="请输入验证码" maxlength="6" style="width: 60%;">
+					</div>
+					<div  onload="createCode()" id="form" style="display: ;margin-left: 5%;">
+						<form id="form1" runat="server" onsubmit="validateCode()">
+							<div class="mui-input-row">
+							<table border="0" cellspacing="2" cellpadding="1" style="margin-top: -10px;">
+								<tr >
+									<td>
+										<a href="#" onclick="createCode()">换一张</a>
+									</td>
+									<td>
+										<div class="code" id="checkCode" style="font-size: 25px;" onclick="createCode()"></div>
+									</td>
+								</tr>
+							</table>
+							</div>
+							<div class="mui-input-row">
+							<table border="0" cellspacing="2" cellpadding="1">
+								<tr class="mui-input-row">
+									<td style="width: 25%;">验证码</td> 
+									<td><input style="float:left;" type="text" id="inputCode" placeholder="请输入验证码" /></td>
+									<td><button style="width: 50px; margin-top: -1px;" class="mui-pull-right" id="Button1" onclick="validateCode();" type="button" value="确定"/>确定</td>
+								</tr>
+							</table>
+							</div>
+						</form>
+					</div>
+					
+				</form>
+				<div class="mui-content-padded">
+					<button id='login' class="mui-btn mui-btn-block mui-btn-primary" style="display: none;" onclick="Login()">登录</button>
+					<div class="link-area">
+						<a id='reg' href="reg.html">注册账号</a> <span class="spliter">|</span>
+						<a id='forgetPassword' href=" forget_password.html">忘记密码</a>
+					</div>
+				</div>
+			</div>
+			<script src="../js/mui.min.js"></script>
+			<script src="../js/urlconfiguration.js"></script>
+			<script>
+				var d = 0,
+					c = 0,
+					code, e = 0;
+
+				function Login() {
+					var account1 = document.getElementById("phonenumber").value;
+					if(d != 1) {
+						mui.alert("手机号错误！");
+						return;
+					}
+					if(c != 1) {
+						mui.alert("验证码错误！");
+						return;
+					}
+					var w = plus.nativeUI.showWaiting("处理中，请等待...\n");
+					//获取手机序列号
+					var clientid = plus.push.getClientInfo().clientid
+					if(plus.os.name == 'iOS') {
+						var token = plus.push.getClientInfo().token
+					}
+					$.ajax({
+						contentType: "application/json",
+						type: "GET",
+						url: url_1 + "get_newUserIdentifyingCode.do?jsoncallback=?",
+						//					url: "test.json",
+						data: "clientid=" + clientid + "&token=" + token + "&phone=" + account1,
+						dataType: "json",
+						success: function(data) {
+							code = null;
+							if(data.flag == 1) {
+									var users = {
+										phonenumber: account1,
+									};
+									localStorage.setItem('$users', JSON.stringify(users));
+									var user_id = data.user.id;
+									localStorage.setItem("user_id", user_id);
+									localStorage.setItem("address_company", data.user.address_company);
+									localStorage.setItem("address_home", data.user.address_home);
+									localStorage.setItem("wechat", data.user.wechat);
+									localStorage.setItem("name_company", data.user.name_company);
+									localStorage.setItem("sex", data.user.sex);
+									localStorage.setItem("phone", data.user.phone);
+									localStorage.setItem("beans", data.user.beans);
+									localStorage.setItem("name", data.user.name);
+									localStorage.setItem("is_vip", data.user.is_vip);
+									localStorage.setItem("user_authenticPer", data.user.user_authenticPer);
+									localStorage.setItem("user_authenticCom", data.user.user_authenticCom);
+									localStorage.setItem("avgscore_boss", data.user.avgscore_boss);
+									localStorage.setItem("avgscore_worker", data.user.avgscore_worker);
+									localStorage.setItem("headPortrait_url", data.user.headPortrait_url);
+									if(data.user.skills != null) {
+										var skills = "";
+										for(i = 0; i < data.user.skills.length; i++) {
+											skills += data.user.skills[i].name + "/";
+										}
+										localStorage.setItem("skills", skills);
+									}
+									w.close();
+									window.location.href = "../main_page/nav.html";
+								}
+							if(data.flag == 0) {
+								w.close();
+								mui.alert("手机号未注册！");
+								window.location.href = "reg.html";
+							}
+						},
+						error: function() {
+							w.close();
+							alert("网络连接出错！");
+						}
+					});
+				}
+
+				$("#phonenumber").blur(function() {
+					var regphone = /^(13[0-9]|15[0-9]|18[0-9]|16[0-9])\d{8}$/;
+					var uphone = $("#phonenumber").val();
+					$("#phonenumber").css("background-color", "white");
+					if(uphone.length <= 0 || !regphone.test(uphone)) {
+						mui.alert("手机号错误！");  
+						d = 0;
+					}else {
+						d=1;
+					}
+				});
+				$("#checknumber").blur(function() {
+					var uchecknumber = $("#checknumber").val();
+					$("#checknumber").css("background-color", "white");
+					if(uchecknumber != code) {
+						c = 0;
+						e++;
+						if(e == 3) {
+							code = null;
+							mui.alert("验证码已失效，请重发！");
+							e = 0;
+						}
+					} else {
+						c = 1;
+					}
+				});
+				
+				//			验证码发送
+				function buttonCountdown($el, msNum, timeFormat) {
+					var type = 3;
+					var $phonenumber = $('#phonenumber').val();
+					if(!(/^1[3|4|5|8][0-9]\d{4,8}$/.test($phonenumber))) {
+						mui.alert("请输入正确手机号！");
+						return false;
+					}
+					sendnum($phonenumber, type);
+					var text = $el.data("text") || $el.text(),
+						timer = 0;
+					$el.prop("disabled", true).addClass("disabled")
+						.on("bc.clear", function() {
+							clearTime();
+						});
+
+					(function countdown() {
+						var time = showTime(msNum)[timeFormat];
+						$el.text('已发送'+time);
+						if(msNum <= 0) {
+							msNum = 0;
+							clearTime();
+						} else {
+							msNum -= 1000;
+							timer = setTimeout(arguments.callee, 1000);
+						}
+					})();
+
+					function clearTime() {
+						clearTimeout(timer);
+						$el.prop("disabled", false).removeClass("disabled").text(text);
+					}
+
+					function showTime(ms) {
+						var d = Math.floor(ms / 1000 / 60 / 60 / 24),
+							h = Math.floor(ms / 1000 / 60 / 60 % 24),
+							m = Math.floor(ms / 1000 / 60 % 60),
+							s = Math.floor(ms / 1000 % 60),
+							ss = Math.floor(ms / 1000);
+
+						return {
+							d: d + "天",
+							h: h + "小时",
+							m: m + "分",
+							ss: ss + "秒",
+							"d:h:m:s": d + "天" + h + "小时" + m + "分" + s + "秒",
+							"h:m:s": h + "小时" + m + "分" + s + "秒",
+							"m:s": m + "分" + s + "秒"
+						};
+					}
+
+					return this;
+				}
+
+				//验证码发送ajax
+				function sendnum($phonenumber, type) {
+					//				var data = "phonenumber=" + account1 + "&password_again=" + account2;
+					$.ajax({
+						contentType: "application/json",
+						type: "GET",
+						url: url_1 + "sendSms.do?jsoncallback=?",
+						//					url: "test.json",
+						data: "phone=" + $phonenumber + "&type=" + type,
+						dataType: "json",
+						success: function(data) {
+							if(data.flag == 1) {
+								mui.alert("验证码发送成功！");
+								code = data.code;
+								mui.alert(code);
+							}
+							if(data.flag == 0) {
+								mui.alert("验证码发送失败！");
+							}
+						},
+						error: function() {
+							alert("网络连接出错！");
+						}
+					});
+
+				}
+
+				//使用演示 显示为 秒
+				$("#test1").on("click", function() {
+					buttonCountdown($(this), 1000 * 60 * 2, "ss");
+				});
+			</script>
+			<script type="text/javascript">
+				var code;
+
+				function createCode() {
+					code = "";
+					var codeLength = 4;
+					//验证码的长度 
+					var checkCode = document.getElementById("checkCode");
+					var codeChars = new Array(2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
+					//所有候选组成验证码的字符，当然也可以用中文的
+					for(var i = 0; i < codeLength; i++) {
+						var charNum = Math.floor(Math.random() * 52);
+						code += codeChars[charNum];
+					}
+					if(checkCode) {
+						checkCode.className = "code";
+						checkCode.innerHTML = code;
+					}
+				}
+				window.onload = createCode; //刷新页面自动实现该函数
+				function validateCode() {
+					var inputCode = document.getElementById("inputCode").value;
+					if(inputCode.length <= 0) {
+						mui.alert("请输入验证码！");
+					} else if(inputCode.toUpperCase() != code.toUpperCase()) {
+						mui.alert("验证码输入有误！");
+						createCode();
+					} else if(d==1&&inputCode.toUpperCase() == code.toUpperCase()){
+						document.getElementById("form").style.display = "none";
+						document.getElementById("get_code").style.display = "";
+						document.getElementById("login").style.display = "";
+					}else if(d==0){
+						mui.alert("手机号错误！");
+					}
+				}
+			</script>
+
+	</body>
+
+</html>

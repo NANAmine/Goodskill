@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="../css/mui.min.css">
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">工作详细资料</h1>
+		</header>
+		<div class="mui-content">
+			<div class="mui-card">
+				<ul class="mui-table-view">
+					<li>
+						<div class="mui-collapse-content">
+							<form class="mui-input-group">
+								<div class="mui-input-row">
+									<label>工作地址：</label>
+									<p id="address">
+
+								</div>
+								<div class="mui-input-row">
+									<label>工作类别：</label>
+									<p id="jobtype"></p>
+								</div>
+								<div class="mui-input-row">
+									<label>所需工种：</label>
+									<div>
+										<p id="workertype"></p>
+									</div>
+								</div>
+								<div class="mui-input-row">
+									<label>所需技能：</label>
+									<div>
+										<p id="skills"></p>
+									</div>
+								</div>
+								<div class="mui-input-row">
+									<label> 工作量：</label>
+									<p id="area"></p>
+								</div>
+								<div class="mui-input-row">
+									<label>薪水：</label>
+									<p id="salary"></p>
+								</div>
+								<div class="mui-input-row">
+									<label>发布人：</label>
+									<p id="personname"></p>
+								</div>
+								<div class="mui-input-row">
+									<label>加急金额：</label>
+									<p id="urgentsalary"></p>
+								</div>
+								<div class="mui-button-row">
+									<button class="mui-btn mui-btn-blue" id="get_order" type="button" onclick="get_order_onclick()" style="display: ; ">接单</button>
+									<button class="mui-btn mui-btn-blue" type="button" onclick="bossinfo()">查看工长信息</button>
+									<!--<input class="mui-btn mui-btn-blue"  id="get_order"  type="button" onclick="get_order_onclick()" style="display: ; background-color: #CCCCCC; " value="接单" ></input>&nbsp;&nbsp;
+									<input type="button" onclick="bossinfo()" value="查看工长信息" style="background-color: #CCCCCC;"></input>-->
+								</div>
+							</form>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<script src="../js/urlconfiguration.js"></script>
+		<script src="../js/istext.js"></script>
+		<script src="../js/jquery-1.6.2.min.js"></script>
+		<script src="../js/mui.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
+		<script src="../js/mui.picker.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script>
+			var jobitem_id;
+			var boss_id;
+			var data_flag;
+
+			(function($, doc) {
+				$('#scroll').scroll({
+					indicators: true //是否显示滚动条
+				});
+				$.plusReady(function() {
+					var self = plus.webview.currentWebview();
+					jobitem_id = self.jobitem_id;
+					boss_id = self.boss_id;
+					flag = self.flag;
+					data_flag = localStorage.getItem("data_flag");
+					if(flag == 1) {
+						document.getElementById("get_order").setAttribute("style", "display: none;");
+					}
+					console.log(jobitem_id);
+					console.log(boss_id);
+					var selectedskill = "";
+
+					var w3 = plus.nativeUI.showWaiting("正在读取数据，请等待...\n", {
+						loading: {
+							icon: "../images/waiting.png"
+						}
+					});
+					jQuery.ajax({
+						contentType: "application/json",
+						type: "GET",
+						url: url_3 + "show_jobitem_byid.do?jsoncallback=?",
+						data: "jobitem_id=" + jobitem_id,
+						dataType: "json",
+						success: function(data) {
+							console.log("id" + jobitem_id);
+							var job_id = data.msg.job.id;
+							document.getElementById("area").innerHTML = data.msg.area;
+							document.getElementById("address").innerHTML = data.msg.job.address + "-" + data.msg.job.community;
+							document.getElementById("salary").innerHTML = data.msg.salary;
+							document.getElementById("workertype").innerHTML = data.msg.jobtype.name;
+							document.getElementById("urgentsalary").innerHTML = data.msg.urgent_fee;
+							document.getElementById("personname").innerHTML = data.msg.job.user.name;
+
+							if(data.msg.salary == 0) {
+								document.getElementById("salary").innerHTML = "面议";
+							}
+
+							if(data.msg.unit == 1) {
+								document.getElementById("area").innerHTML = document.getElementById("area").innerHTML + " 平米";
+							}
+							if(data.msg.unit == 2) {
+								document.getElementById("area").innerHTML = document.getElementById("area").innerHTML + " 延米";
+							}
+
+							if(data.msg.job.decoration_type == 1) {
+								document.getElementById("jobtype").innerHTML = "毛坯装修";
+							}
+							if(data.msg.job.decoration_type == 2) {
+								document.getElementById("jobtype").innerHTML = "新房改造";
+							}
+
+							for(i = 0; i < data.skills.length; i++) {
+								if(selectedskill == "") {
+									selectedskill = data.skills[i].jobtype.name;
+								} else {
+									selectedskill = selectedskill + "  " + data.skills[i].jobtype.name;
+								}
+							}
+							document.getElementById("skills").innerHTML = selectedskill;
+
+							if(data.msg.job.user.user_authentic == "0") {
+								document.getElementById("personname").innerHTML = document.getElementById("personname").innerHTML +
+									'<a id="icon-person">&nbsp;&nbsp;已认证</a>'
+							}
+							if(data.msg.job.user.is_vip == "0") {
+								document.getElementById("personname").innerHTML = document.getElementById("personname").innerHTML +
+									'<a id="icon-person">&nbsp;&nbsp;vip用户</a>'
+							}
+
+							var timeset = 1;
+							var timer = setInterval(function() {
+								if(timeset == 0) {
+									clearInterval(timer);
+									w3.close();
+								} else {
+									--timeset;
+								}
+							}, 1000);
+						},
+						error: function() {
+							w3.close();
+							mui.alert('网络连接错误1', '错误', function() {});
+						}
+					});
+
+				})
+
+			})(mui, document);
+
+			function bossinfo() {
+				var baseUrl = '../person_center/bossinfo.html';
+				var url = mui.os.plus ? baseUrl : baseUrl + '?boss_id=' + boss_id;
+				mui.openWindow({
+					url: url,
+					extras: {
+						boss_id: boss_id,
+					}
+				})
+			}
+
+			function open_help() {
+				var baseUrl = '../person_center/help.html';
+				var url = mui.os.plus ? baseUrl : baseUrl;
+				mui.openWindow({
+					url: url,
+				})
+			}
+
+			//接单按钮   
+			function get_order_onclick() {
+				var user_id = localStorage.getItem("user_id");
+				var beans = localStorage.getItem("beans");
+				console.log("beans:" + beans);
+				var user_authenticPer = localStorage.getItem("user_authenticPer");
+				console.log("user_authPer" + user_authenticPer);
+				console.log("user_id:" + user_id);
+				console.log("jobitem_id:" + jobitem_id);
+				if(user_authenticPer == "1") {
+					console.log("1");
+					if(beans < 1) {
+						mui.alert("豆已用完，过会儿再来吧");
+					} else {
+						if($("#get_order").val() == "成功接单") {
+							mui.alert("您已接此单！");
+						}
+						if($("#get_order").val() == "接单") {
+							console.log("2");
+							$.ajax({
+								contentType: "application/json",
+								type: "get",
+								url: url_3 + "add_jobitem_user.do?jsoncallback=?",
+								data: "jobitem_id=" + jobitem_id + "&user_id=" + user_id,
+								dataType: "json",
+								success: function(data) {
+									console.log("flag:" + data.flag);
+									if(data.flag == 3) {
+										localStorage.setItem("data_flag", data.flag);
+										mui.alert("您已接此单！");
+									} else {
+										jobitem_user_id = data.jobitem_user_id;
+										$("#get_order").val("成功接单");
+									}
+								},
+								error: function(data) {
+									alert(data);
+									alert("网络连接出错！");
+								}
+							});
+						}
+					}
+				} else {
+					mui.alert("请先去完成实名认证！");
+				}
+
+			}
+		</script>
+	</body>
+
+</html>

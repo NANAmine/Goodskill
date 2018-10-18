@@ -1,0 +1,38 @@
+[{"type":"电工",
+"skill":"技能一，技能二",
+"flag":1,
+"childre":[{
+	"id":1,
+	"name":"李师傅",
+	"pingjia":5,
+	"worktype":"电工",
+	"flag":1
+	},{
+		"id":2,
+		"name":"王师傅",
+		"pingjia":4,
+		"worktype":"木工",
+		"flag":1
+		}]},{
+"type":"木工",
+"skill":"技能一，技能三",
+"flag":2,
+"childre":[{
+	"id":3,
+	"name":"李师傅",
+	"pingjia":5,
+	"worktype":"电工",
+	"flag":2
+	}]},{
+"type":"电工",
+"skill":"技能一，技能二",
+"flag":3,
+"childre":[{
+	"id":5,
+	"name":"李师傅",
+	"pingjia":5,
+	"worktype":"电工",
+	"flag":3
+	}]}]
+	
+
